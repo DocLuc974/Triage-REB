@@ -1,0 +1,27 @@
+{
+  "ebola-zones": {
+    "signature": "\"1ba45-653e6326b42f6\"",
+    "checkedAt": "2026-06-24T19:31:45.282Z",
+    "lastChangedAt": "2026-06-24T19:31:45.282Z"
+  },
+  "fhcc-coreb": {
+    "signature": "\"4eec64a-37411-64e4e71ec6f80\"",
+    "checkedAt": "2026-06-24T19:31:45.282Z",
+    "lastChangedAt": "2026-06-24T19:31:45.282Z"
+  },
+  "fhv-coreb-index": {
+    "signature": "7c4451a090ae6c32865c052f4f6da21905021681522a53327a39103715d54888",
+    "checkedAt": "2026-06-24T19:31:45.282Z",
+    "lastChangedAt": "2026-06-24T19:31:45.282Z"
+  },
+  "mers-cov-def": {
+    "signature": "\"1782318602\"",
+    "checkedAt": "2026-06-24T19:31:45.282Z",
+    "lastChangedAt": "2026-06-24T19:31:45.282Z"
+  },
+  "mpox-page": {
+    "signature": "\"1782318940\"",
+    "checkedAt": "2026-06-24T19:31:45.282Z",
+    "lastChangedAt": "2026-06-24T19:31:45.282Z"
+  }
+}
