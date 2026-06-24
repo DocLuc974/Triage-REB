@@ -1,0 +1,17 @@
+{
+  "name": "Triage REB — CHU de La Réunion",
+  "short_name": "Triage REB",
+  "description": "Aide à la décision pour le classement des cas REB (FHV, MERS-CoV, Mpox) — SMIT, CHU de La Réunion.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#0057a8",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
