@@ -897,6 +897,36 @@ class Component extends DCLogic {
     else { this.setState({shared:true}); }
   };
 
+  // Accepte 2 formats : (1) format simple {fhv:{eb,marburg,lassa,fhcc}, mers:[...], mpox:[...]}
+  // (2) format riche multi-pathogènes {zones:[...](=Ebola), autres_pathogenes_reb:{lassa,marburg,fhcc,mers_cov,mpox}}
+  normalizeZones(data){
+    const out={fhv:null,mers:null,mpox:null};
+    if(!data||typeof data!=='object') return out;
+    // Format simple (legacy)
+    if(data.fhv || Array.isArray(data.mers) || Array.isArray(data.mpox)){
+      out.fhv=data.fhv||null;
+      out.mers=Array.isArray(data.mers)?data.mers:null;
+      out.mpox=Array.isArray(data.mpox)?data.mpox:null;
+      return out;
+    }
+    // Format riche
+    const mapZone=(z)=>{
+      const name=z.name||z.country||'';
+      const country=z.country||'';
+      const tag=(!country||name===country)?'Pays à risque':country;
+      return { tag, name, cap:z.capital||z.cap||'', risk:(z.risk==='high'?'high':'medium') };
+    };
+    const fhv={};
+    if(Array.isArray(data.zones)) fhv.eb=data.zones.map(mapZone);
+    const ap=data.autres_pathogenes_reb||{};
+    ['lassa','marburg','fhcc'].forEach(k=>{ if(ap[k]&&Array.isArray(ap[k].zones)) fhv[k]=ap[k].zones.map(mapZone); });
+    if(Object.keys(fhv).length) out.fhv=fhv;
+    const mersSrc=ap.mers_cov||ap.mers;
+    if(mersSrc&&Array.isArray(mersSrc.zones)) out.mers=mersSrc.zones.map(z=>z.name||z.country);
+    if(ap.mpox&&Array.isArray(ap.mpox.zones)) out.mpox=ap.mpox.zones.map(z=>z.name||z.country);
+    return out;
+  }
+
   onZoneUrl = (e)=>this.setState({zoneUrl:e.target.value});
   resetZones = ()=>{ try{ localStorage.removeItem('reb_zone_url'); }catch(e){} this.setState({zoneUrl:'',remoteFhv:null,remoteMers:null,remoteMpox:null,zoneStatus:'Zones réinitialisées aux valeurs par défaut.',zoneStatusKind:'ok'}); };
   loadZones = async ()=>{
@@ -906,8 +936,10 @@ class Component extends DCLogic {
     try{
       const res=await fetch(url,{cache:'no-store'}); if(!res.ok) throw new Error('HTTP '+res.status);
       const data=await res.json();
+      const z=this.normalizeZones(data);
+      if(!z.fhv && !z.mers && !z.mpox) throw new Error('Format non reconnu (ni « fhv/mers/mpox », ni « zones/autres_pathogenes_reb »)');
       try{ localStorage.setItem('reb_zone_url',url); }catch(e){}
-      this.setState({remoteFhv:data.fhv||null,remoteMers:data.mers||null,remoteMpox:data.mpox||null,zoneStatus:'✓ Zones mises à jour depuis la source distante ('+this.now()+').',zoneStatusKind:'ok'});
+      this.setState({remoteFhv:z.fhv,remoteMers:z.mers,remoteMpox:z.mpox,zoneStatus:'✓ Zones mises à jour depuis la source distante ('+this.now()+').',zoneStatusKind:'ok'});
     }catch(err){
       this.setState({zoneStatus:'⚠ Échec : '+err.message+'. Vérifiez l\u2019URL et les autorisations (CORS).',zoneStatusKind:'err'});
     }
