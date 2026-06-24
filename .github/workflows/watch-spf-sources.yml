@@ -1,0 +1,33 @@
+name: Surveillance sources REB (FHV, MERS-CoV, Mpox)
+
+on:
+  schedule:
+    - cron: '0 5 * * 1'   # Tous les lundis à 05h00 UTC (≈ 09h00 La Réunion)
+  workflow_dispatch: {}    # Permet de lancer manuellement depuis l'onglet Actions
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Vérifier les sources
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node .github/scripts/watch-sources.mjs
+
+      - name: Sauvegarder l'état
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: mise à jour watch-state.json [skip ci]"
+          file_pattern: watch-state.json
