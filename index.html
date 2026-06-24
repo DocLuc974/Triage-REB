@@ -797,9 +797,27 @@ class Component extends DCLogic {
   MERS_ACTIONS = ['Isolement « air + contact » sans délai (chambre seule)','Masque chirurgical porté par le patient','Signalement infectiologue référent + ARS','Prélèvements respiratoires voies basses après validation','RT-PCR MERS-CoV réalisée sur place (labo CHU) — DO si confirmé'];
   MPOX_ACTIONS = ['Isolement « contact + gouttelettes » (air si forme grave / clade I)','Couvrir les lésions, masque chirurgical patient','Signalement ARS + infectiologue référent','Prélèvement de lésion + écouvillon oropharyngé — PCR orthopoxvirus (triple emballage, pas de pneumatique)','Adulte NORD : jour ouvré → avis 40464 ou CeGIDD 02 62 90 55 69 ; hors horaires → astreinte 0692 26 76 51 (prélèvement CeGIDD le lendemain) ; signe de gravité → urgences','Adulte SUD : jours ouvrés → CeGIDD 02 62 35 96 30 ; nuit/WE/férié ou hospit → urgences infectieuses dédiées (cf. protocole CHU Sud)','Enfant : NORD sénior UHCD péd 40210 (< 6 ans PEC conjointe infectiologue) ; SUD pédiatre de garde DECT 55194, box chambre 105 UHCD ; précautions contact + respiratoire'];
 
+  DEFAULT_ZONE_URL = 'https://docluc974.github.io/Triage-REB/zones-multi-pathogenes.json';
+
   componentDidMount(){
-    try{ const u=localStorage.getItem('reb_zone_url'); if(u) this.setState({zoneUrl:u}); }catch(e){}
+    let u=this.DEFAULT_ZONE_URL;
+    try{ const saved=localStorage.getItem('reb_zone_url'); if(saved) u=saved; }catch(e){}
+    this.setState({zoneUrl:u});
+    // Synchro automatique au lancement (silencieuse, repli hors-ligne)
+    this.autoSyncZones(u);
   }
+
+  autoSyncZones = async (url)=>{
+    if(!url) return;
+    try{
+      const res=await fetch(url,{cache:'no-store'}); if(!res.ok) throw new Error('HTTP '+res.status);
+      const data=await res.json();
+      const z=this.normalizeZones(data);
+      if(!z.fhv && !z.mers && !z.mpox) return;
+      try{ localStorage.setItem('reb_zone_url',url); }catch(e){}
+      this.setState({remoteFhv:z.fhv,remoteMers:z.mers,remoteMpox:z.mpox,zoneStatus:'✓ Zones synchronisées automatiquement ('+this.now()+').',zoneStatusKind:'ok'});
+    }catch(err){ /* hors-ligne : on garde les dernières zones connues, aucune alerte */ }
+  };
 
   scrollTop(){ requestAnimationFrame(()=>{ const el=document.getElementById('reb-scroll'); if(el) el.scrollTop=0; }); }
   go = (s)=>{ this.setState({screen:s,shared:false}); this.scrollTop(); };
@@ -928,7 +946,7 @@ class Component extends DCLogic {
   }
 
   onZoneUrl = (e)=>this.setState({zoneUrl:e.target.value});
-  resetZones = ()=>{ try{ localStorage.removeItem('reb_zone_url'); }catch(e){} this.setState({zoneUrl:'',remoteFhv:null,remoteMers:null,remoteMpox:null,zoneStatus:'Zones réinitialisées aux valeurs par défaut.',zoneStatusKind:'ok'}); };
+  resetZones = ()=>{ try{ localStorage.removeItem('reb_zone_url'); }catch(e){} this.setState({zoneUrl:this.DEFAULT_ZONE_URL,remoteFhv:null,remoteMers:null,remoteMpox:null,zoneStatus:'Zones réinitialisées (valeurs intégrées à l\u2019app).',zoneStatusKind:'ok'}); };
   loadZones = async ()=>{
     const url=this.state.zoneUrl.trim();
     if(!url){ this.setState({zoneStatus:'Saisissez une URL de configuration.',zoneStatusKind:'err'}); return; }
