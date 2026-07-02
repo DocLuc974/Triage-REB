@@ -1,27 +1,27 @@
 {
   "ebola-zones": {
     "signature": "\"1ba45-653e6326b42f6\"",
-    "checkedAt": "2026-07-02T19:03:18.933Z",
+    "checkedAt": "2026-07-02T19:03:48.546Z",
     "lastChangedAt": "2026-06-24T19:31:45.282Z"
   },
   "fhcc-coreb": {
     "signature": "\"4eec64a-37411-64e4e71ec6f80\"",
-    "checkedAt": "2026-07-02T19:03:18.933Z",
+    "checkedAt": "2026-07-02T19:03:48.546Z",
     "lastChangedAt": "2026-06-24T19:31:45.282Z"
   },
   "fhv-coreb-index": {
-    "signature": "d7e0003ccdc1eb76bc918719e79e31aa863c1f7c2fa7c55ca858bb0bec58ebf9",
-    "checkedAt": "2026-07-02T19:03:18.933Z",
-    "lastChangedAt": "2026-07-02T19:03:18.933Z"
+    "signature": "c88ea1dac423262d12eefee6f271d67cf46319db1adbda39442701a4ba74fcdd",
+    "checkedAt": "2026-07-02T19:03:48.546Z",
+    "lastChangedAt": "2026-07-02T19:03:48.546Z"
   },
   "mers-cov-def": {
     "signature": "\"1783010106\"",
-    "checkedAt": "2026-07-02T19:03:18.933Z",
+    "checkedAt": "2026-07-02T19:03:48.546Z",
     "lastChangedAt": "2026-07-02T19:03:18.933Z"
   },
   "mpox-page": {
     "signature": "\"1783010154\"",
-    "checkedAt": "2026-07-02T19:03:18.933Z",
+    "checkedAt": "2026-07-02T19:03:48.546Z",
     "lastChangedAt": "2026-07-02T19:03:18.933Z"
   }
 }
