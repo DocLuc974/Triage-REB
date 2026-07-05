@@ -1,0 +1,45 @@
+name: Surveillance sources REB (FHV, MERS-CoV, Mpox)
+
+on:
+  schedule:
+    - cron: '0 5 * * 1'   # Tous les lundis a 05h00 UTC (~09h00 La Reunion)
+  workflow_dispatch: {}    # Lancement manuel depuis l'onglet Actions
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Installer pdf-parse
+        run: npm i pdf-parse@1.1.1 --no-save
+
+      - name: Verifier la fiche COREB et proposer la mise a jour
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node .github/scripts/watch-sources.mjs
+
+      - name: Ouvrir une Pull Request si le JSON a change
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "maj: zones Ebola depuis fiche COREB"
+          branch: maj-zones-auto
+          delete-branch: true
+          title: "Zones a risque Ebola - a valider"
+          body: |
+            Proposition automatique a partir de la fiche COREB Ebola.
+            Relire le diff de `zones-multi-pathogenes.json` avant de fusionner.
+          add-paths: |
+            zones-multi-pathogenes.json
+            watch-state.json
