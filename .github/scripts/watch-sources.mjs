@@ -1,116 +1,97 @@
 #!/usr/bin/env node
-/**
- * Surveillance des sources REB (FHV/Ebola, Lassa, Marburg, FHCC, MERS-CoV, Mpox)
- * - Vérifie si chaque document/page suivi a changé depuis la dernière exécution
- * - Crée une issue GitHub si un changement est détecté (→ email automatique)
- * - Sauvegarde l'état dans watch-state.json
- */
 import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
+import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 
-const CONFIG_PATH = 'watch-sources.json';
 const STATE_PATH = 'watch-state.json';
+const ZONES_PATH = 'zones-multi-pathogenes.json';
 
-async function loadJson(path, fallback) {
-  try {
-    return JSON.parse(await readFile(path, 'utf8'));
-  } catch {
-    return fallback;
+// Source Ebola = fiche COREB (URL STABLE, mise a jour en place)
+const EBOLA_FICHE = 'https://www.coreb.infectiologie.com/UserFiles/File/procedures/2025118-fiche-coreb-fhv-ebola.pdf';
+
+const CAPITALES = {'ituri':'Bunia','nord kivu':'Goma','sud kivu':'Bukavu','haut uele':'Isiro',
+  'kinshasa':'Kinshasa','tshopo':'Kisangani','bas uele':'Buta','maniema':'Kindu',
+  'tanganyika':'Kalemie','equateur':'Mbandaka','mongala':'Lisala','haut katanga':'Lubumbashi'};
+const CAP_PAYS = {'ouganda':'Kampala','rwanda':'Kigali','burundi':'Gitega',
+  'soudan du sud':'Djouba','tanzanie':'Dodoma','republique centrafricaine':'Bangui'};
+const norm  = (s)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[\s\-']+/g,' ').trim();
+const titre = (s)=>s.split(' ').map(w=>w?w[0].toUpperCase()+w.slice(1):w).join(' ').replace(/\bRdc\b/,'RDC');
+
+async function loadJson(p, f){ try { return JSON.parse(await readFile(p,'utf8')); } catch { return f; } }
+
+function parseZones(text){
+  const start = text.search(/zone[s]?\s+d.end[e\u00e9]mie/i);
+  const end   = text.search(/questions?\s+cl[e\u00e9]s/i);
+  const block = text.slice(start>=0?start:0, end>=0?end:text.length);
+  const zones = [];
+  const mRdc = block.match(/RDC\s*:\s*([^\n]+)/i);
+  if (mRdc) for (const raw of mRdc[1].split(/[,;]/)){
+    const name = raw.trim().replace(/\.$/,''); if(!name) continue;
+    zones.push({country:'RDC',type:'province',name:titre(name),capital:CAPITALES[norm(name)]||'',risk:'high'});
   }
+  for (const line of block.split('\n')){
+    const m = line.match(/^\s*[-\u2022o]\s*(.+?)\s*$/); if(!m) continue;
+    const nl = norm(m[1]);
+    if (nl === 'rdc' || nl.startsWith('rdc ')) continue;
+    if (CAP_PAYS[nl]) zones.push({country:titre(nl),type:'country',name:titre(nl),capital:CAP_PAYS[nl],risk:'medium'});
+  }
+  return zones;
 }
 
-async function checkSource(source) {
-  const res = await fetch(source.url, {
-    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; REB-Watch/1.0; +github-actions)' }
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const etag = res.headers.get('etag');
-  const lastModified = res.headers.get('last-modified');
-  let signature = etag || lastModified;
-  if (!signature) {
-    const buf = Buffer.from(await res.arrayBuffer());
-    signature = createHash('sha256').update(buf).digest('hex');
-  }
-  return signature;
+async function createIssue(title, body){
+  const repo = process.env.GITHUB_REPOSITORY, token = process.env.GITHUB_TOKEN;
+  if (!repo || !token) return;
+  await fetch(`https://api.github.com/repos/${repo}/issues`, {
+    method:'POST',
+    headers:{ Authorization:`Bearer ${token}`, Accept:'application/vnd.github+json', 'Content-Type':'application/json' },
+    body: JSON.stringify({ title, body, labels:['surveillance-reb'] })
+  }).catch(()=>{});
 }
 
-async function createIssue(title, body) {
-  const repo = process.env.GITHUB_REPOSITORY;
-  const token = process.env.GITHUB_TOKEN;
-  if (!repo || !token) {
-    console.log('GITHUB_REPOSITORY / GITHUB_TOKEN manquant — issue non créée.');
-    return;
-  }
-  const res = await fetch(`https://api.github.com/repos/${repo}/issues`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/vnd.github+json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ title, body, labels: ['surveillance-reb'] })
-  });
-  if (!res.ok) {
-    console.error('Échec création issue :', res.status, await res.text());
-  } else {
-    console.log('Issue créée avec succès.');
-  }
-}
-
-async function main() {
-  const config = await loadJson(CONFIG_PATH, { sources: [] });
+async function main(){
   const state = await loadJson(STATE_PATH, {});
-  const changes = [];
-  const errors = [];
   const now = new Date().toISOString();
 
-  for (const source of config.sources) {
-    try {
-      const signature = await checkSource(source);
-      const prev = state[source.id];
-      const isFirstRun = !prev;
-      const hasChanged = Boolean(prev) && prev.signature !== signature;
+  const res = await fetch(EBOLA_FICHE, { headers:{ 'User-Agent':'REB-Watch/2.0' } });
+  if (!res.ok) throw new Error('HTTP '+res.status+' sur la fiche COREB');
+  const buf = Buffer.from(await res.arrayBuffer());
+  const hash = createHash('sha256').update(buf).digest('hex');
 
-      if (hasChanged) {
-        changes.push({ ...source, previousCheck: prev.checkedAt });
+  const prev = state.ebola_fiche;
+  const changed = prev && prev.hash !== hash;
+
+  let jsonUpdated = false;
+  if (changed || process.env.FORCE_PARSE){
+    const { text } = await pdfParse(buf);
+    const newZones = parseZones(text);
+    if (newZones.length >= 2){                          // garde-fou
+      const zjson = await loadJson(ZONES_PATH, null);
+      if (zjson){
+        zjson.zones = newZones;
+        zjson.updated = now.slice(0,10);
+        zjson.source = 'Fiche COREB - Ebola';
+        zjson.source_url = EBOLA_FICHE;
+        await writeFile(ZONES_PATH, JSON.stringify(zjson, null, 2) + '\n');
+        jsonUpdated = true;
+        console.log('JSON mis a jour :', newZones.map(z=>z.name).join(', '));
       }
-
-      state[source.id] = {
-        signature,
-        checkedAt: now,
-        lastChangedAt: hasChanged ? now : (prev?.lastChangedAt ?? (isFirstRun ? now : null))
-      };
-    } catch (e) {
-      errors.push({ ...source, error: e.message });
-      console.error(`Erreur sur ${source.id} :`, e.message);
+    } else {
+      console.log('Extraction trop faible - JSON non modifie (garde-fou).');
     }
   }
 
+  state.ebola_fiche = { hash, checkedAt: now, lastChangedAt: changed ? now : (prev?.lastChangedAt ?? now) };
   await writeFile(STATE_PATH, JSON.stringify(state, null, 2) + '\n');
 
-  if (changes.length > 0) {
-    const title = `🔔 Mise à jour détectée — ${changes.map(c => c.pathogen).join(', ')}`;
-    const body = [
-      `Les sources suivantes semblent avoir été modifiées depuis la dernière vérification :`,
-      '',
-      ...changes.map(c =>
-        `- **${c.pathogen}** — [${c.label}](${c.url})\n  Dernière vérification précédente : ${c.previousCheck}\n  Note : ${c.note || '—'}`
-      ),
-      '',
-      errors.length
-        ? `⚠️ Erreurs rencontrées sur d'autres sources :\n${errors.map(e => `- ${e.pathogen} (${e.label}) : ${e.error}`).join('\n')}`
-        : '',
-      '',
-      `**Action à faire :** vérifier le document source ci-dessus, puis mettre à jour le fichier \`zones.json\` (Gist) si la liste des zones à risque a changé.`,
-    ].join('\n');
-    await createIssue(title, body);
+  if (changed){
+    await createIssue(
+      '\ud83d\udd14 Fiche COREB Ebola modifiee - verifier les zones',
+      jsonUpdated
+        ? 'Une **Pull Request** a ete preparee avec les zones a jour. A relire et fusionner.'
+        : '\u26a0\ufe0f Changement detecte mais extraction impossible - verifier manuellement la fiche COREB.'
+    );
   } else {
-    console.log('Aucun changement détecté.');
-    if (errors.length) console.log('Erreurs :', errors);
+    console.log('Aucun changement.');
   }
 }
-
-main().catch(e => {
-  console.error(e);
-  process.exit(1);
-});
+main().catch(e=>{ console.error(e); process.exit(1); });
