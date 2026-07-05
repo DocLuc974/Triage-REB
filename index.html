@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" rx="20" fill="#0057a8"/>
+    <circle cx="50" cy="42" r="15" fill="none" stroke="#fff" stroke-width="4"/>
+    <circle cx="50" cy="42" r="4" fill="#fff"/>
+    <path d="M50 27 a15 15 0 0 1 13 7.5 M50 57 a15 15 0 0 1 -13 -7.5 M50 57 a15 15 0 0 0 13 -7.5" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <text x="50" y="80" font-family="Inter,sans-serif" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">REB</text>
+  </svg>
+</template>
+<helmet>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#d6dbe4;-webkit-font-smoothing:antialiased}
+#reb-scroll::-webkit-scrollbar{width:0}
+@keyframes rebpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(1.6)}}
+/* Plein écran adaptatif : sur petit écran ou app installée, on retire le cadre maquette */
+@media (max-width:600px), (display-mode:standalone){
+  #reb-app-bg{padding:0 !important;background:#fff !important;align-items:stretch !important;min-height:100dvh !important}
+  #reb-phone{width:100% !important;background:#fff !important;border-radius:0 !important;padding:0 !important;box-shadow:none !important}
+  #reb-screen{height:100dvh !important;border-radius:0 !important}
+  #reb-statusbar{display:none !important}
+  #reb-appbar{padding-top:max(8px,env(safe-area-inset-top)) !important}
+  #reb-scroll{padding-bottom:env(safe-area-inset-bottom) !important}
+}
+@media print{
+  body *{visibility:hidden !important}
+  #fiche-print, #fiche-print *{visibility:visible !important}
+  #fiche-print{position:fixed !important;inset:0 !important;margin:0 !important;padding:24px 28px !important;width:auto !important;border:none !important;border-radius:0 !important;box-shadow:none !important;background:#fff !important}
+  #fiche-print .noprint{display:none !important}
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0057a8" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Triage REB" />
+<link rel="apple-touch-icon" href="assets/icon-192.png" />
+<link rel="icon" type="image/png" href="assets/icon-192.png" />
+<link rel="manifest" href="manifest.webmanifest" />
+<script>
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+}
+</script>
+</helmet>
+
+<div id="reb-app-bg" style="min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:36px 18px 48px;background:#d6dbe4">
+  <div id="reb-phone" style="width:392px;flex:none;background:#0b0d10;border-radius:54px;padding:11px;box-shadow:0 30px 70px rgba(15,42,77,.30),0 4px 14px rgba(0,0,0,.18)">
+    <div id="reb-screen" style="position:relative;height:838px;border-radius:44px;overflow:hidden;background:#f3f5f8;display:flex;flex-direction:column">
+
+      <!-- status bar -->
+      <div id="reb-statusbar" style="position:relative;z-index:5;height:50px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px 0 30px;background:#fff">
+        <div style="font-size:15px;font-weight:600;color:#0f2d52;letter-spacing:.3px">9:41</div>
+        <div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:118px;height:30px;background:#0b0d10;border-radius:18px"></div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <div style="display:flex;align-items:flex-end;gap:2px;height:11px">
+            <div style="width:3px;height:5px;background:#0f2d52;border-radius:1px"></div>
+            <div style="width:3px;height:7px;background:#0f2d52;border-radius:1px"></div>
+            <div style="width:3px;height:9px;background:#0f2d52;border-radius:1px"></div>
+            <div style="width:3px;height:11px;background:#0f2d52;border-radius:1px"></div>
+          </div>
+          <div style="width:23px;height:12px;border:1.5px solid #0f2d52;border-radius:3px;padding:1.5px;position:relative"><div style="width:100%;height:100%;background:#0f2d52;border-radius:1px"></div><div style="position:absolute;right:-3px;top:3px;width:2px;height:5px;background:#0f2d52;border-radius:0 1px 1px 0"></div></div>
+        </div>
+      </div>
+
+      <!-- app bar -->
+      <div id="reb-appbar" style="position:relative;z-index:4;flex:none;display:flex;align-items:center;gap:11px;padding:8px 16px 13px;background:#fff;border-bottom:1px solid #eceff3">
+        <sc-if value="{{ homeBar }}" hint-placeholder-val="{{ true }}">
+          <div style="width:40px;height:40px;border-radius:12px;background:#f1f6fb;border:1px solid #e2ebf4;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden">
+            <img src="assets/logo_mark.png" alt="REB RUN" style="width:30px;height:30px;object-fit:contain" />
+          </div>
+        </sc-if>
+        <sc-if value="{{ canBack }}">
+          <div onClick="{{ back }}" style="width:40px;height:40px;border-radius:12px;background:#f1f4f8;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;font-size:22px;color:#0057a8;font-weight:600;line-height:1;padding-bottom:3px">‹</div>
+        </sc-if>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:16px;font-weight:700;color:#0f2d52;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ barTitle }}</div>
+          <div style="font-size:11px;color:#8a99ab;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ barSub }}</div>
+        </div>
+        <sc-if value="{{ canBack }}">
+          <div onClick="{{ goHome }}" style="width:38px;height:38px;border-radius:11px;background:#f1f4f8;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;color:#5b6b7e">⌂</div>
+        </sc-if>
+        <sc-if value="{{ homeBar }}" hint-placeholder-val="{{ true }}">
+          <div onClick="{{ goSettings }}" style="width:38px;height:38px;border-radius:11px;background:#f1f4f8;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;color:#5b6b7e;font-size:17px">⚙</div>
+        </sc-if>
+      </div>
+
+      <!-- stepper (FHV) -->
+      <sc-if value="{{ showStepper }}">
+        <div style="flex:none;display:flex;padding:13px 18px 12px;background:#fff;border-bottom:1px solid #eceff3">
+          <sc-for list="{{ ebSteps }}" as="st" hint-placeholder-count="4">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;position:relative">
+              <div style="{{ st.line }}"></div>
+              <div style="{{ st.dot }}">{{ st.mark }}</div>
+              <div style="{{ st.lab }}">{{ st.l }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- progress (mers / mpox) -->
+      <sc-if value="{{ showMeProg }}">
+        <div style="flex:none;display:flex;gap:6px;padding:15px 18px 13px;background:#fff;border-bottom:1px solid #eceff3">
+          <sc-for list="{{ meDots }}" as="d" hint-placeholder-count="3">
+            <div style="{{ d.style }}"></div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- scroll content -->
+      <div id="reb-scroll" style="flex:1;overflow-y:auto;background:#f3f5f8">
+
+        <!-- ============ HOME ============ -->
+        <sc-if value="{{ show.home }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:18px 16px 26px">
+            <img src="assets/logo_horizontal.png" alt="REB RUN — CHU La Réunion · ESRR" style="display:block;width:100%;max-width:280px;height:auto;margin:8px auto 20px" />
+            <sc-if value="{{ veille }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                <div style="display:inline-flex;align-items:center;gap:7px;background:#fff5f5;border:1px solid #fca5a5;color:#c0392b;padding:6px 11px;border-radius:30px;font-size:12px;font-weight:600">
+                  <span style="width:7px;height:7px;border-radius:50%;background:#dc2626;display:inline-block;animation:rebpulse 1.5s infinite"></span>Veille épidémique active
+                </div>
+              </div>
+            </sc-if>
+
+            <div style="font-size:23px;font-weight:700;color:#0f2d52;line-height:1.2;letter-spacing:-.3px">Quel agent évaluer&nbsp;?</div>
+            <div style="font-size:13.5px;color:#64748b;margin-top:6px;line-height:1.5">Sélectionnez l'agent biologique pour lancer le classement du cas selon la définition en vigueur.</div>
+
+            <!-- FHV group -->
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#c0392b;margin:20px 0 10px;display:flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#dc2626"></span>Fièvres hémorragiques virales · REB</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <sc-for list="{{ fhvCards }}" as="a" hint-placeholder-count="4">
+                <div onClick="{{ a.onClick }}" style="background:#fff;border:1px solid #eceff3;border-radius:16px;padding:14px;cursor:pointer;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+                  <span style="{{ a.dot }}"></span>
+                  <div style="font-size:14.5px;font-weight:700;color:#0f2d52;margin-top:11px;line-height:1.2">{{ a.short }}</div>
+                  <div style="font-size:11px;color:#5b6b7e;margin-top:3px;line-height:1.3">{{ a.full }}</div>
+                  <div style="font-size:10px;color:#a3afbd;margin-top:2px;line-height:1.2">{{ a.family }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- Respiratoire group -->
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#0d9488;margin:20px 0 10px;display:flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#0d9488"></span>Respiratoire émergent</div>
+            <div onClick="{{ startMers }}" style="background:#fff;border:1px solid #eceff3;border-radius:16px;padding:15px;display:flex;align-items:center;gap:13px;cursor:pointer;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="width:46px;height:46px;border-radius:13px;background:#f0fdfa;border:1px solid #99f6e4;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="width:16px;height:16px;border-radius:50%;background:#0d9488;box-shadow:0 0 0 4px #ccfbf1"></span></div>
+              <div style="flex:1;min-width:0"><div style="font-size:15.5px;font-weight:700;color:#0f2d52">MERS-CoV</div><div style="font-size:12px;color:#64748b;margin-top:2px;line-height:1.35">Coronavirus du Moyen-Orient · SPF 2024</div></div>
+              <div style="font-size:22px;color:#cbd5e1">›</div>
+            </div>
+
+            <!-- Éruptif group -->
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#7c3aed;margin:20px 0 10px;display:flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#7c3aed"></span>Orthopoxvirose éruptive</div>
+            <div onClick="{{ startMpox }}" style="background:#fff;border:1px solid #eceff3;border-radius:16px;padding:15px;display:flex;align-items:center;gap:13px;cursor:pointer;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="width:46px;height:46px;border-radius:13px;background:#f5f3ff;border:1px solid #ddd6fe;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="width:16px;height:16px;border-radius:50%;background:#7c3aed;box-shadow:0 0 0 4px #ede9fe"></span></div>
+              <div style="flex:1;min-width:0"><div style="font-size:15.5px;font-weight:700;color:#0f2d52">Mpox / Variole</div><div style="font-size:12px;color:#64748b;margin-top:2px;line-height:1.35">Orthopoxvirus · clade I &amp; II</div></div>
+              <div style="font-size:22px;color:#cbd5e1">›</div>
+            </div>
+
+            <div style="display:flex;gap:11px;margin-top:20px">
+              <div onClick="{{ goContacts }}" style="flex:1;background:#0057a8;border-radius:15px;padding:15px 12px;cursor:pointer;display:flex;flex-direction:column;gap:8px;box-shadow:0 2px 8px rgba(0,87,168,.25)">
+                <span style="font-size:19px">☎</span>
+                <span style="font-size:13.5px;font-weight:600;color:#fff;line-height:1.2">Contacts<br>d'urgence</span>
+              </div>
+              <div onClick="{{ goSettings }}" style="flex:1;background:#fff;border:1px solid #eceff3;border-radius:15px;padding:15px 12px;cursor:pointer;display:flex;flex-direction:column;gap:8px">
+                <span style="font-size:19px">🗺</span>
+                <span style="font-size:13.5px;font-weight:600;color:#0f2d52;line-height:1.2">Zones à risque<br>&amp; paramètres</span>
+              </div>
+            </div>
+
+            <div style="text-align:center;font-size:10.5px;color:#9aa7b6;margin-top:22px;line-height:1.6">{{ etab }} · SMIT · Unité REB — ESR Océan Indien<br>Aide à la décision — ne se substitue pas à l'avis de l'infectiologue référent</div>
+          </div>
+        </sc-if>
+
+        <!-- ============ FHV — CLINIQUE ============ -->
+        <sc-if value="{{ show.ebClin }}">
+          <div style="padding:16px 14px 24px">
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:18px;padding:18px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="font-size:17px;font-weight:700;color:#0f2d52;line-height:1.35">Le patient présente-t-il ≥ 1 critère évocateur de {{ ag.short }}&nbsp;?</div>
+              <div style="font-size:12.5px;color:#64748b;margin:7px 0 15px;line-height:1.5">Cocher tous les signes présents — un seul critère suffit.</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ ebSymItems }}" as="it" hint-placeholder-count="0">
+                  <div onClick="{{ it.onClick }}" style="{{ it.style }}"><div style="{{ it.dot }}"></div><span>{{ it.label }}</span></div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:9px;margin-top:16px">
+                <div onClick="{{ ebClinNone }}" style="flex:1;padding:14px;border-radius:14px;border:1.5px solid #dfe5ec;background:#fff;text-align:center;font-size:14px;font-weight:600;color:#475569;cursor:pointer">Aucun signe</div>
+                <div onClick="{{ ebClinNext }}" style="{{ ebClinBtn }}">{{ ebClinLabel }}</div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ FHV — ZONE ============ -->
+        <sc-if value="{{ show.ebZone }}">
+          <div style="padding:16px 14px 24px">
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:18px;padding:18px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="font-size:17px;font-weight:700;color:#0f2d52;line-height:1.35">Retour d'une <span style="color:#dc2626">zone de circulation</span> du virus dans les {{ ag.windowTxt }} derniers jours&nbsp;?</div>
+              <div style="display:flex;align-items:center;gap:7px;font-size:11.5px;color:#92702a;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:8px 11px;margin:13px 0">⊙ {{ zoneUpdate }}</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px">
+                <sc-for list="{{ ebZoneCards }}" as="z" hint-placeholder-count="4">
+                  <div style="{{ z.box }}"><div style="{{ z.tagStyle }}">{{ z.tag }}</div><div style="font-size:14px;font-weight:600;color:#1a2230;margin-top:2px">{{ z.name }}</div><div style="font-size:11px;color:#7a8a9a;margin-top:1px">{{ z.cap }}</div></div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:9px">
+                <div onClick="{{ ebZoneNo }}" style="flex:1;padding:14px;border-radius:14px;border:1.5px solid #dfe5ec;background:#fff;text-align:center;font-size:14px;font-weight:600;color:#475569;cursor:pointer">Non</div>
+                <div onClick="{{ ebZoneYes }}" style="flex:1;padding:14px;border-radius:14px;border:none;background:#0057a8;text-align:center;font-size:14px;font-weight:600;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,87,168,.25)">Oui — ≤ {{ ag.windowTxt }} j</div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ FHV — CRITÈRES ============ -->
+        <sc-if value="{{ show.ebCrit }}">
+          <div style="padding:16px 14px 24px">
+            <div style="display:flex;gap:10px;background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #d97706;border-radius:13px;padding:13px;margin-bottom:13px">
+              <span style="color:#d97706;font-size:16px">▲</span>
+              <div style="font-size:12.5px;color:#92702a;line-height:1.5"><b style="color:#7a5a12">Cas suspect</b> — Isolement immédiat · Masque chirurgical · Infectiologue REB&nbsp;: <b>02 62 26 76 51</b></div>
+            </div>
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:18px;padding:18px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="font-size:16px;font-weight:700;color:#0f2d52;line-height:1.35;margin-bottom:13px">Au moins un critère de cas <span style="color:#dc2626">possible</span>&nbsp;?</div>
+
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#c0392b;margin-bottom:8px">Voie A — Exposition à risque établie</div>
+              <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:15px">
+                <sc-for list="{{ ebExpItems }}" as="it" hint-placeholder-count="0">
+                  <div onClick="{{ it.onClick }}" style="{{ it.style }}"><div style="{{ it.cb }}">{{ it.mark }}</div><span>{{ it.label }}</span></div>
+                </sc-for>
+              </div>
+
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#d97706;margin-bottom:8px">Voie B — Exposition impossible à évaluer</div>
+              <div onClick="{{ toggleVB }}" style="{{ vbStyle }}"><div style="{{ vbCb }}">{{ vbMark }}</div><span>Interrogatoire impossible <b>ou</b> exposition à un cas suspect / possible non encore classé</span></div>
+
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#d97706;margin:15px 0 8px">Voie C — Triade clinique sans exposition certaine</div>
+              <div onClick="{{ toggleVC }}" style="{{ vcStyle }}"><div style="{{ vcCb }}">{{ vcMark }}</div><span><b>Fièvre</b> + <b>signes généraux</b> + <b>hémorragie</b> (digestive, gingivale, épistaxis, purpura…)</span></div>
+
+              <div style="display:flex;gap:9px;margin-top:17px">
+                <div onClick="{{ ebCritNone }}" style="flex:1;padding:14px;border-radius:14px;border:1.5px solid #dfe5ec;background:#fff;text-align:center;font-size:14px;font-weight:600;color:#475569;cursor:pointer">Aucun critère</div>
+                <div onClick="{{ ebCritNext }}" style="{{ ebCritBtn }}">{{ ebCritLabel }}</div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ FHV — PROFIL ============ -->
+        <sc-if value="{{ show.ebProfil }}">
+          <div style="padding:16px 14px 24px">
+            <div style="display:flex;gap:10px;background:#fef2f2;border:1px solid #fecaca;border-left:4px solid #dc2626;border-radius:13px;padding:13px;margin-bottom:13px">
+              <span style="color:#dc2626;font-size:16px">⬡</span>
+              <div style="font-size:12.5px;color:#b3322a;line-height:1.5"><b style="color:#991b1b">Cas possible</b> — EPI groupe 4 · Prélèvement CNR FHV en urgence</div>
+            </div>
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:18px;padding:18px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="font-size:16px;font-weight:700;color:#0f2d52;margin-bottom:14px">Profil clinique du patient</div>
+              <div style="display:flex;flex-direction:column;gap:11px">
+                <div onClick="{{ setSubNe }}" style="{{ subNeStyle }}">
+                  <div style="{{ subNeRad }}"></div>
+                  <div><div style="font-size:15px;font-weight:700;color:#1a2230;margin-bottom:3px">Non excréteur</div><div style="font-size:12.5px;color:#64748b;line-height:1.5">Patient stable · Pas de saignement, vomissements ni diarrhée · Pas de réanimation</div></div>
+                </div>
+                <div onClick="{{ setSubEx }}" style="{{ subExStyle }}">
+                  <div style="{{ subExRad }}"></div>
+                  <div><div style="font-size:15px;font-weight:700;color:#1a2230;margin-bottom:3px">Excréteur · Avéré</div><div style="font-size:12.5px;color:#64748b;line-height:1.5">Sécrétions · Vomissements · Diarrhées · Hémorragies · Soins de réanimation</div></div>
+                </div>
+              </div>
+              <div onClick="{{ ebProfilNext }}" style="{{ ebProfilBtn }}">Voir les recommandations →</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ FHV — RÉSULTAT POSSIBLE ============ -->
+        <sc-if value="{{ show.ebRes }}">
+          <div style="padding:16px 14px 26px">
+            <div style="{{ ebHeroStyle }}">
+              <div style="{{ ebHeroBadge }}"></div>
+              <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#94a3b5;margin-bottom:4px">Cas possible · {{ ag.short }}</div>
+              <div style="font-size:21px;font-weight:700;color:#1a2230">{{ ebHeroTitle }}</div>
+              <div style="font-size:13px;color:#64748b;margin-top:6px;line-height:1.5">{{ ebHeroSub }}</div>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#94a3b5;margin:18px 0 9px">Actions immédiates</div>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <div style="background:#fffbeb;border-left:3px solid #d97706;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#92702a;line-height:1.5">⊟ Isolement — chambre seule, porte fermée, matériel dédié</div>
+              <div style="background:#fef2f2;border-left:3px solid #dc2626;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#b3322a;line-height:1.5">⚑ Signalement ARS Océan Indien immédiat</div>
+              <div style="background:#eff6ff;border-left:3px solid #2563eb;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#1d4ed8;line-height:1.5">☎ Infectiologue REB SMIT Nord&nbsp;: <b>02 62 26 76 51</b></div>
+              <div style="background:#fef2f2;border-left:3px solid #dc2626;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#b3322a;line-height:1.5">⚗ Prélèvement CNR FHV — RT-PCR, après validation infectiologue</div>
+            </div>
+
+            <div style="background:#0f2d52;border-radius:16px;padding:16px;margin-top:16px">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#7fb0e8;margin-bottom:11px">EPI groupe 4 — {{ ebEpiLabel }}</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ ebEpiItems }}" as="e" hint-placeholder-count="7">
+                  <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:6px 12px;font-size:12px;color:#e6eef8">{{ e }}</div>
+                </sc-for>
+              </div>
+              <div style="font-size:11px;color:rgba(180,210,250,.65);margin-top:11px;line-height:1.5">▲ Habillage / déshabillage encadré · Ne jamais intervenir seul · Réf. COREB 06/06/2026</div>
+            </div>
+
+            <!-- cas-contact table -->
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#94a3b5;margin:18px 0 9px">Évaluation des sujets-contacts</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ contactRows }}" as="r" hint-placeholder-count="3">
+                <div style="{{ r.box }}">
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="{{ r.dot }}"></span><span style="font-size:13px;font-weight:700;color:#1a2230">{{ r.level }}</span></div>
+                  <div style="font-size:12px;color:#475569;line-height:1.45">{{ r.def }}</div>
+                  <div style="font-size:11.5px;color:#64748b;line-height:1.45;margin-top:5px"><b style="color:#1a2230">CAT&nbsp;:</b> {{ r.cat }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:14px;padding:14px;margin-top:16px;font-size:12.5px;color:#64748b;line-height:1.6">
+              <b style="color:#1a2230">RT-PCR CNR FHV</b> — résultat 3 à 6 h après réception. <b style="color:#b3322a">Acheminement depuis La Réunion&nbsp;: 24 à 48 h min.</b> En attente&nbsp;: patient isolé en secteur REB — ESR Réunion&nbsp;: CHU St-Denis.
+            </div>
+
+            <div style="display:flex;gap:9px;margin-top:14px">
+              <div onClick="{{ goFiche }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#0057a8;border-radius:14px;padding:14px;font-size:13.5px;font-weight:600;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,87,168,.25)">▤ Fiche résumé</div>
+              <div onClick="{{ goContacts }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#fff;border:1.5px solid #dfe5ec;border-radius:14px;padding:14px;font-size:13.5px;font-weight:600;color:#0057a8;cursor:pointer">☎ Contacts</div>
+            </div>
+            <div onClick="{{ restart }}" style="text-align:center;padding:14px;margin-top:9px;border:1.5px solid #dfe5ec;border-radius:14px;font-size:14px;font-weight:600;color:#475569;cursor:pointer">↺ Nouveau patient</div>
+          </div>
+        </sc-if>
+
+        <!-- ============ FHV — PAS DE SUSPICION ============ -->
+        <sc-if value="{{ show.ebNone }}">
+          <div style="padding:16px 14px 26px">
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:16px;padding:22px 18px;text-align:center">
+              <div style="width:44px;height:44px;border-radius:50%;background:#16a34a;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px">✓</div>
+              <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#94a3b5;margin-bottom:4px">Résultat</div>
+              <div style="font-size:20px;font-weight:700;color:#1a2230">Pas de suspicion {{ ag.short }}</div>
+              <div style="font-size:13px;color:#64748b;margin-top:6px;line-height:1.5">Le patient ne répond pas aux critères. Poursuivre la prise en charge habituelle.</div>
+            </div>
+            <div style="background:#eff6ff;border-left:3px solid #2563eb;border-radius:10px;padding:12px 13px;margin-top:14px;font-size:12.5px;color:#1d4ed8;line-height:1.5">ⓘ En cas de doute ou d'évolution, réévaluer et contacter l'infectiologue REB.</div>
+            <div onClick="{{ restart }}" style="text-align:center;padding:14px;margin-top:14px;border:1.5px solid #dfe5ec;border-radius:14px;font-size:14px;font-weight:600;color:#475569;cursor:pointer">↺ Nouveau patient</div>
+          </div>
+        </sc-if>
+
+        <!-- ============ FHV — EXCLU ============ -->
+        <sc-if value="{{ show.ebExclu }}">
+          <div style="padding:16px 14px 26px">
+            <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:16px;padding:22px 18px;text-align:center">
+              <div style="width:44px;height:44px;border-radius:50%;background:#2563eb;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px">i</div>
+              <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#94a3b5;margin-bottom:4px">Résultat</div>
+              <div style="font-size:20px;font-weight:700;color:#1a2230">Cas exclu · Infirmé</div>
+              <div style="font-size:13px;color:#64748b;margin-top:6px;line-height:1.5">Critères suspects présents mais aucun critère de cas possible retenu.</div>
+            </div>
+            <div style="background:#eff6ff;border-left:3px solid #2563eb;border-radius:10px;padding:12px 13px;margin-top:14px;font-size:12.5px;color:#1d4ed8;line-height:1.5">☎ Levée d'isolement après avis infectiologue REB.</div>
+            <div style="background:#fffbeb;border-left:3px solid #d97706;border-radius:10px;padding:12px 13px;margin-top:8px;font-size:12.5px;color:#92702a;line-height:1.5">▲ Si exclusion impossible → conférence téléphonique CNR FHV + infectiologue ESR + ARS + SPF.</div>
+            <div onClick="{{ restart }}" style="text-align:center;padding:14px;margin-top:14px;border:1.5px solid #dfe5ec;border-radius:14px;font-size:14px;font-weight:600;color:#475569;cursor:pointer">↺ Nouveau patient</div>
+          </div>
+        </sc-if>
+
+        <!-- ============ MERS — INTRO ============ -->
+        <sc-if value="{{ show.meIntro }}">
+          <div style="padding:16px 14px 24px">
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:18px;padding:18px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="font-size:19px;font-weight:700;color:#0f2d52;line-height:1.25">Évaluation d'un cas suspect MERS-CoV</div>
+              <div style="font-size:13px;color:#64748b;margin-top:7px;line-height:1.55">Applique la définition de cas Santé publique France (10/06/2024) pour orienter le classement en <b>cas possible</b>.</div>
+              <div style="background:#eff6ff;border-left:3px solid #2563eb;border-radius:10px;padding:12px 13px;margin:14px 0;font-size:12.5px;color:#1d4ed8;line-height:1.5"><b>Fenêtre d'exposition&nbsp;:</b> les expositions à risque sont évaluées dans les <b>14 jours</b> précédant les symptômes.</div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#0d9488;margin-bottom:8px">Pays à risque actuels</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;background:#f0fdfa;border:1px solid #99f6e4;border-radius:12px;padding:12px">
+                <sc-for list="{{ merZones }}" as="z" hint-placeholder-count="7">
+                  <div style="background:#0d9488;color:#fff;border-radius:20px;padding:4px 11px;font-size:12px;font-weight:500">{{ z }}</div>
+                </sc-for>
+              </div>
+              <div onClick="{{ meStart }}" style="text-align:center;padding:15px;margin-top:16px;border:none;border-radius:14px;background:#0057a8;font-size:15px;font-weight:600;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,87,168,.25)">Démarrer l'évaluation →</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ MERS — CLINIQUE ============ -->
+        <sc-if value="{{ show.meClin }}">
+          <div style="padding:16px 14px 24px">
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:18px;padding:18px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="font-size:17px;font-weight:700;color:#0f2d52;margin-bottom:4px">Quel est le tableau clinique&nbsp;?</div>
+              <div style="font-size:12.5px;color:#64748b;margin-bottom:15px;line-height:1.5">Sélectionnez la présentation la plus grave correspondant au patient.</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div onClick="{{ meClinSevere }}" style="border:1.5px solid #dfe5ec;border-left:4px solid #0d9488;border-radius:13px;padding:14px;cursor:pointer;background:#fff"><div style="font-size:14.5px;font-weight:600;color:#1a2230">Tableau clinique sévère</div><div style="font-size:12px;color:#64748b;margin-top:3px;line-height:1.5">SDRA ou pneumopathie hypoxémiante (O₂-requérance + imagerie) avec fièvre ≥ 38 °C</div></div>
+                <div onClick="{{ meClinIra }}" style="border:1.5px solid #dfe5ec;border-left:4px solid #0d9488;border-radius:13px;padding:14px;cursor:pointer;background:#fff"><div style="font-size:14.5px;font-weight:600;color:#1a2230">Infection respiratoire aiguë (IRA)</div><div style="font-size:12px;color:#64748b;margin-top:3px">Quel que soit le niveau de gravité</div></div>
+                <div onClick="{{ meClinImmuno }}" style="border:1.5px solid #dfe5ec;border-left:4px solid #d97706;border-radius:13px;padding:14px;cursor:pointer;background:#fff"><div style="font-size:14.5px;font-weight:600;color:#1a2230">Immunodéprimé / pathologie chronique</div><div style="font-size:12px;color:#64748b;margin-top:3px;line-height:1.5">Considérer aussi syndrome fébrile + diarrhée et/ou tableau sévère</div></div>
+                <div onClick="{{ meClinNone }}" style="border:1.5px solid #dfe5ec;border-radius:13px;padding:14px;cursor:pointer;background:#f7f9fb"><div style="font-size:14.5px;font-weight:600;color:#64748b">Aucun de ces tableaux</div><div style="font-size:12px;color:#90a0b0;margin-top:3px">Pas de signe respiratoire ni syndrome compatible</div></div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ MERS — IMMUNO ============ -->
+        <sc-if value="{{ show.meImmuno }}">
+          <div style="padding:16px 14px 24px">
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:18px;padding:18px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="font-size:17px;font-weight:700;color:#0f2d52;margin-bottom:6px">Terrain particulier — immunodéprimé</div>
+              <div style="font-size:12.5px;color:#64748b;margin-bottom:13px;line-height:1.55">Chez ces patients, un syndrome fébrile avec diarrhée et/ou un tableau sévère doit aussi faire évoquer le MERS-CoV.</div>
+              <div style="background:#fffbeb;border-left:3px solid #d97706;border-radius:10px;padding:12px 13px;margin-bottom:14px;font-size:12.5px;color:#92702a;line-height:1.5"><b>Présentation atypique possible</b> — manifestations digestives ou fébriles isolées à prendre en compte.</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div onClick="{{ meImmunoYes }}" style="border:1.5px solid #dfe5ec;border-left:4px solid #0d9488;border-radius:13px;padding:14px;cursor:pointer;background:#fff;font-size:14px;font-weight:600;color:#1a2230;line-height:1.45">Syndrome fébrile + diarrhée et/ou tableau sévère → poursuivre</div>
+                <div onClick="{{ meImmunoNo }}" style="border:1.5px solid #dfe5ec;border-radius:13px;padding:14px;cursor:pointer;background:#f7f9fb;font-size:14px;font-weight:600;color:#64748b">Aucun syndrome compatible</div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ MERS — EXPOSITION ============ -->
+        <sc-if value="{{ show.meExpo }}">
+          <div style="padding:16px 14px 24px">
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:18px;padding:18px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="font-size:17px;font-weight:700;color:#0f2d52;margin-bottom:4px">Exposition à risque dans les 14 jours&nbsp;?</div>
+              <div style="font-size:12.5px;color:#64748b;margin-bottom:14px;line-height:1.5">{{ meExpoLead }}</div>
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <sc-if value="{{ meSevere }}">
+                  <div onClick="{{ meExpoVoyage }}" style="border:1.5px solid #dfe5ec;border-left:4px solid #0d9488;border-radius:13px;padding:13px 14px;cursor:pointer;background:#fff;font-size:13.5px;font-weight:600;color:#1a2230">Voyage ou séjour en pays à risque<div style="font-size:11.5px;font-weight:400;color:#7a8a9a;margin-top:2px">dans les 14 jours précédant les symptômes</div></div>
+                </sc-if>
+                <div onClick="{{ meExpoContact }}" style="border:1.5px solid #dfe5ec;border-left:4px solid #0d9488;border-radius:13px;padding:13px 14px;cursor:pointer;background:#fff;font-size:13.5px;font-weight:600;color:#1a2230">Contact avec un cas possible / confirmé symptomatique<div style="font-size:11.5px;font-weight:400;color:#7a8a9a;margin-top:2px">famille, soignants…</div></div>
+                <div onClick="{{ meExpoSoins }}" style="border:1.5px solid #dfe5ec;border-left:4px solid #0d9488;border-radius:13px;padding:13px 14px;cursor:pointer;background:#fff;font-size:13.5px;font-weight:600;color:#1a2230">Activité pro / hospitalisation en ES en pays à risque</div>
+                <div onClick="{{ meExpoDromadaire }}" style="border:1.5px solid #dfe5ec;border-left:4px solid #0d9488;border-radius:13px;padding:13px 14px;cursor:pointer;background:#fff;font-size:13.5px;font-weight:600;color:#1a2230">Contact proche avec un dromadaire ou produit dérivé<div style="font-size:11.5px;font-weight:400;color:#7a8a9a;margin-top:2px">lait non pasteurisé, viande crue, urine</div></div>
+                <div onClick="{{ meExpoNone }}" style="border:1.5px solid #dfe5ec;border-radius:13px;padding:13px 14px;cursor:pointer;background:#f7f9fb;font-size:13.5px;font-weight:600;color:#64748b">Aucune exposition à risque</div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ MERS — POSSIBLE ============ -->
+        <sc-if value="{{ show.meResP }}">
+          <div style="padding:16px 14px 26px">
+            <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:16px;padding:20px 18px;text-align:center">
+              <div style="display:inline-block;background:#dc2626;color:#fff;font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 13px;border-radius:20px;margin-bottom:10px">CAS POSSIBLE</div>
+              <div style="font-size:20px;font-weight:700;color:#1a2230">Classé cas possible MERS-CoV</div>
+              <div style="font-size:13px;color:#64748b;margin-top:6px;line-height:1.5">Critères clinique + exposition à risque (14 j) réunis selon la définition SPF.</div>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#94a3b5;margin:18px 0 9px">Conduite à tenir immédiate</div>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <div style="background:#fef2f2;border-left:3px solid #dc2626;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#b3322a;line-height:1.5">Isolement <b>air + contact</b> sans délai (chambre seule, idéalement pression négative)</div>
+              <div style="background:#fffbeb;border-left:3px solid #d97706;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#92702a;line-height:1.5">Masque chirurgical porté par le patient</div>
+              <div style="background:#eff6ff;border-left:3px solid #2563eb;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#1d4ed8;line-height:1.5">Signalement infectiologue référent + ARS (point focal régional)</div>
+              <div style="background:#fef2f2;border-left:3px solid #dc2626;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#b3322a;line-height:1.5">Prélèvements respiratoires (voies <b>basses ++</b>) après validation</div>
+            </div>
+
+            <div style="background:#0f2d52;border-radius:16px;padding:16px;margin-top:16px">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#7fb0e8;margin-bottom:11px">EPI — précautions « air » + « contact »</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ merEpi }}" as="e" hint-placeholder-count="5">
+                  <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:6px 12px;font-size:12px;color:#e6eef8">{{ e }}</div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:14px;padding:14px;margin-top:16px;font-size:12.5px;color:#64748b;line-height:1.6"><b style="color:#1a2230">Prélèvements</b> — privilégier les voies respiratoires <b>basses</b> (expectorations, aspiration trachéale, LBA), plus sensibles. RT-PCR MERS-CoV <b style="color:#15803d">réalisée sur place</b> par le laboratoire du CHU (résultat rapide, sans acheminement). <b style="color:#92702a">Cas confirmé</b> = prélèvement positif → déclaration obligatoire, recherche de contacts.</div>
+
+            <div style="display:flex;gap:9px;margin-top:14px">
+              <div onClick="{{ goFiche }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#0057a8;border-radius:14px;padding:14px;font-size:13.5px;font-weight:600;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,87,168,.25)">▤ Fiche résumé</div>
+              <div onClick="{{ goContacts }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#fff;border:1.5px solid #dfe5ec;border-radius:14px;padding:14px;font-size:13.5px;font-weight:600;color:#0057a8;cursor:pointer">☎ Contacts</div>
+            </div>
+            <div onClick="{{ restart }}" style="text-align:center;padding:14px;margin-top:9px;border:1.5px solid #dfe5ec;border-radius:14px;font-size:14px;font-weight:600;color:#475569;cursor:pointer">↺ Nouvelle évaluation</div>
+          </div>
+        </sc-if>
+
+        <!-- ============ MERS — IMPROBABLE ============ -->
+        <sc-if value="{{ show.meResI }}">
+          <div style="padding:16px 14px 26px">
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:16px;padding:20px 18px;text-align:center">
+              <div style="display:inline-block;background:#16a34a;color:#fff;font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 13px;border-radius:20px;margin-bottom:10px">CAS PEU PROBABLE</div>
+              <div style="font-size:20px;font-weight:700;color:#1a2230">Critères MERS-CoV non réunis</div>
+              <div style="font-size:13px;color:#64748b;margin-top:6px;line-height:1.5">La combinaison clinique + exposition à risque (14 j) n'est pas satisfaite.</div>
+            </div>
+            <div style="background:#eff6ff;border-left:3px solid #2563eb;border-radius:10px;padding:12px 13px;margin-top:14px;font-size:12.5px;color:#1d4ed8;line-height:1.5"><b>À réévaluer si</b> évolution clinique, nouvelle exposition (voyage, contact, dromadaire) ou signes de gravité.</div>
+            <div style="background:#fffbeb;border-left:3px solid #d97706;border-radius:10px;padding:12px 13px;margin-top:8px;font-size:12.5px;color:#92702a;line-height:1.5"><b>Vigilance</b> — précautions standard, envisager diagnostics différentiels respiratoires (grippe, SARS-CoV-2…).</div>
+            <div onClick="{{ restart }}" style="text-align:center;padding:14px;margin-top:14px;border:1.5px solid #dfe5ec;border-radius:14px;font-size:14px;font-weight:600;color:#475569;cursor:pointer">↺ Nouvelle évaluation</div>
+          </div>
+        </sc-if>
+
+        <!-- ============ MPOX — INTRO ============ -->
+        <sc-if value="{{ show.mpIntro }}">
+          <div style="padding:16px 14px 24px">
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:18px;padding:18px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="font-size:19px;font-weight:700;color:#0f2d52;line-height:1.25">Évaluation Mpox / Variole</div>
+              <div style="font-size:13px;color:#64748b;margin-top:7px;line-height:1.55">Orientation d'un cas suspect d'orthopoxvirose (éruption évocatrice) vers le classement <b>cas possible</b>.</div>
+              <div style="background:#f5f3ff;border-left:3px solid #7c3aed;border-radius:10px;padding:12px 13px;margin:14px 0;font-size:12.5px;color:#6d28d9;line-height:1.5"><b>Fenêtre d'exposition&nbsp;:</b> expositions évaluées dans les <b>21 jours</b> précédant le début des signes.</div>
+              <div style="background:#fff5f5;border:1px solid #fca5a5;border-left:3px solid #dc2626;border-radius:10px;padding:11px 13px;margin-bottom:13px;font-size:12.5px;color:#b3322a;line-height:1.5"><b>⚠ Madagascar</b> — zone à risque supplémentaire (épidémie clade Ib en cours). Proximité directe avec La Réunion : vigilance renforcée pour tout voyageur.</div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#7c3aed;margin-bottom:8px">Zones de circulation clade I &amp; régionales</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:12px;padding:12px">
+                <sc-for list="{{ mpZones }}" as="z" hint-placeholder-count="5">
+                  <div style="background:#7c3aed;color:#fff;border-radius:20px;padding:4px 11px;font-size:12px;font-weight:500">{{ z }}</div>
+                </sc-for>
+              </div>
+              <div onClick="{{ mpStart }}" style="text-align:center;padding:15px;margin-top:16px;border:none;border-radius:14px;background:#0057a8;font-size:15px;font-weight:600;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,87,168,.25)">Démarrer l'évaluation →</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ MPOX — CLINIQUE ============ -->
+        <sc-if value="{{ show.mpClin }}">
+          <div style="padding:16px 14px 24px">
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:18px;padding:18px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="font-size:17px;font-weight:700;color:#0f2d52;margin-bottom:4px">Tableau cutané évocateur&nbsp;?</div>
+              <div style="font-size:12.5px;color:#64748b;margin-bottom:15px;line-height:1.5">Sélectionnez la présentation correspondant au patient.</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div onClick="{{ mpClinErup }}" style="border:1.5px solid #dfe5ec;border-left:4px solid #7c3aed;border-radius:13px;padding:14px;cursor:pointer;background:#fff"><div style="font-size:14.5px;font-weight:600;color:#1a2230">Éruption cutanéo-muqueuse évocatrice</div><div style="font-size:12px;color:#64748b;margin-top:3px;line-height:1.5">Macules → vésicules → pustules à ombilication centrale, douloureuses · visage, paumes/plantes, ano-génital, bouche · lésions d'âges parfois différents</div></div>
+                <div onClick="{{ mpClinFebr }}" style="border:1.5px solid #dfe5ec;border-left:4px solid #7c3aed;border-radius:13px;padding:14px;cursor:pointer;background:#fff"><div style="font-size:14.5px;font-weight:600;color:#1a2230">Phase prodromique fébrile</div><div style="font-size:12px;color:#64748b;margin-top:3px;line-height:1.5">Fièvre > 38 °C, poly-adénopathies, myalgies, dysphagie · énanthème débutant (bouche / langue)</div></div>
+                <div onClick="{{ mpClinNone }}" style="border:1.5px solid #dfe5ec;border-radius:13px;padding:14px;cursor:pointer;background:#f7f9fb"><div style="font-size:14.5px;font-weight:600;color:#64748b">Aucune éruption compatible</div><div style="font-size:12px;color:#90a0b0;margin-top:3px">Pas de lésion cutanée évocatrice</div></div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ MPOX — ÉPIDÉMIO ============ -->
+        <sc-if value="{{ show.mpEpi }}">
+          <div style="padding:16px 14px 24px">
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:18px;padding:18px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="font-size:17px;font-weight:700;color:#0f2d52;margin-bottom:4px">Lien épidémiologique (21 j)&nbsp;?</div>
+              <div style="font-size:12.5px;color:#64748b;margin-bottom:14px;line-height:1.5">Au moins un facteur d'exposition parmi les suivants.</div>
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <div onClick="{{ mpEpiContact }}" style="border:1.5px solid #dfe5ec;border-left:4px solid #7c3aed;border-radius:13px;padding:13px 14px;cursor:pointer;background:#fff;font-size:13.5px;font-weight:600;color:#1a2230">Contact avec un cas confirmé / probable<div style="font-size:11.5px;font-weight:400;color:#7a8a9a;margin-top:2px">peau, lésions, gouttelettes, sexuel, linge souillé</div></div>
+                <div onClick="{{ mpEpiVoyage }}" style="border:1.5px solid #dfe5ec;border-left:4px solid #7c3aed;border-radius:13px;padding:13px 14px;cursor:pointer;background:#fff;font-size:13.5px;font-weight:600;color:#1a2230">Voyage en zone de circulation clade I<div style="font-size:11.5px;font-weight:400;color:#7a8a9a;margin-top:2px">Afrique centrale / de l'Est dans les 21 j</div></div>
+                <div onClick="{{ mpEpiMada }}" style="border:1.5px solid #fcd9a8;border-left:4px solid #d97706;border-radius:13px;padding:13px 14px;cursor:pointer;background:#fffbeb;font-size:13.5px;font-weight:600;color:#1a2230"><div style="display:flex;align-items:center;gap:7px"><span>Voyage à Madagascar</span><span style="font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#b06a16;background:#fde8c4;border-radius:6px;padding:2px 6px;white-space:nowrap">Ajout local</span></div><div style="font-size:11.5px;font-weight:400;color:#9a7a3a;margin-top:2px">Zone à risque supplémentaire — hors reco SPF, contexte Réunion</div></div>
+                <div onClick="{{ mpEpiReseau }}" style="border:1.5px solid #dfe5ec;border-left:4px solid #7c3aed;border-radius:13px;padding:13px 14px;cursor:pointer;background:#fff;font-size:13.5px;font-weight:600;color:#1a2230">Partenaires multiples / réseau à risque</div>
+                <div onClick="{{ mpEpiAnimal }}" style="border:1.5px solid #dfe5ec;border-left:4px solid #7c3aed;border-radius:13px;padding:13px 14px;cursor:pointer;background:#fff;font-size:13.5px;font-weight:600;color:#1a2230">Contact animal (rongeurs / primates importés)</div>
+                <div onClick="{{ mpEpiNone }}" style="border:1.5px solid #dfe5ec;border-radius:13px;padding:13px 14px;cursor:pointer;background:#f7f9fb;font-size:13.5px;font-weight:600;color:#64748b">Aucun lien identifié</div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ MPOX — POSSIBLE ============ -->
+        <sc-if value="{{ show.mpResP }}">
+          <div style="padding:16px 14px 26px">
+            <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:16px;padding:20px 18px;text-align:center">
+              <div style="display:inline-block;background:#7c3aed;color:#fff;font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 13px;border-radius:20px;margin-bottom:10px">CAS POSSIBLE</div>
+              <div style="font-size:20px;font-weight:700;color:#1a2230">Cas possible Mpox</div>
+              <div style="font-size:13px;color:#64748b;margin-top:6px;line-height:1.5">Éruption évocatrice + lien épidémiologique (21 j) réunis.</div>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#94a3b5;margin:18px 0 9px">Conduite à tenir immédiate</div>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <div style="background:#f5f3ff;border-left:3px solid #7c3aed;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#6d28d9;line-height:1.5">Isolement <b>contact + gouttelettes</b> (air si formes graves / aérosols / clade I)</div>
+              <div style="background:#fffbeb;border-left:3px solid #d97706;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#92702a;line-height:1.5">Couvrir les lésions · masque chirurgical patient</div>
+              <div style="background:#eff6ff;border-left:3px solid #2563eb;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#1d4ed8;line-height:1.5">Signalement ARS + infectiologue référent · DO si confirmé</div>
+              <div style="background:#f5f3ff;border-left:3px solid #7c3aed;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#6d28d9;line-height:1.5">Prélèvement : écouvillon sec sur plusieurs lésions <b>+ prélèvement oropharyngé</b> — PCR MPXV / orthopoxvirus <b>réalisée sur place</b> (labo CHU)</div>
+            </div>
+
+            <div style="background:#0f2d52;border-radius:16px;padding:16px;margin-top:16px">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#7fb0e8;margin-bottom:11px">EPI — contact + gouttelettes</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ mpEpi }}" as="e" hint-placeholder-count="5">
+                  <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:6px 12px;font-size:12px;color:#e6eef8">{{ e }}</div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#94a3b5;margin:20px 0 9px">Orientation &amp; circuit patient</div>
+            <div style="display:flex;gap:5px;background:#eef2f7;border-radius:13px;padding:4px;margin-bottom:8px">
+              <div onClick="{{ setMpNord }}" style="{{ segNordStyle }}">CHU Nord · Félix-Guyon</div>
+              <div onClick="{{ setMpSud }}" style="{{ segSudStyle }}">CHU Sud</div>
+            </div>
+            <div style="display:flex;gap:5px;background:#f1f1f6;border-radius:13px;padding:4px;margin-bottom:11px">
+              <div onClick="{{ setMpAdulte }}" style="{{ segAdulteStyle }}">Circuit adulte</div>
+              <div onClick="{{ setMpEnfant }}" style="{{ segEnfantStyle }}">Circuit enfant</div>
+            </div>
+
+            <sc-if value="{{ mpIsAdulte }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <sc-for list="{{ mpCircItems }}" as="c" hint-placeholder-count="4">
+                  <div style="background:#fff;border:1px solid #eceff3;border-left:3px solid #7c3aed;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#283443;line-height:1.5"><span style="font-weight:700;color:#6d28d9">{{ c.head }}</span> — {{ c.rest }}</div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ mpIsEnfant }}">
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <div style="background:#fff7ed;border:1px solid #fed7aa;border-left:3px solid #ea580c;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#9a3412;line-height:1.5;font-weight:600">⚠ Définition pédiatrique : éruption + fièvre (mesurée/ressentie) + contact étroit &amp; prolongé avec un cas confirmé/probable.</div>
+                <sc-for list="{{ mpCircItems }}" as="c" hint-placeholder-count="4">
+                  <div style="background:#fff;border:1px solid #eceff3;border-left:3px solid #ea580c;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#283443;line-height:1.5"><span style="font-weight:700;color:#c2410c">{{ c.head }}</span> — {{ c.rest }}</div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <div style="display:flex;gap:9px;margin-top:16px">
+              <div onClick="{{ goFiche }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#0057a8;border-radius:14px;padding:14px;font-size:13.5px;font-weight:600;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,87,168,.25)">▤ Fiche résumé</div>
+              <div onClick="{{ goContacts }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#fff;border:1.5px solid #dfe5ec;border-radius:14px;padding:14px;font-size:13.5px;font-weight:600;color:#0057a8;cursor:pointer">☎ Contacts</div>
+            </div>
+            <div onClick="{{ restart }}" style="text-align:center;padding:14px;margin-top:9px;border:1.5px solid #dfe5ec;border-radius:14px;font-size:14px;font-weight:600;color:#475569;cursor:pointer">↺ Nouvelle évaluation</div>
+          </div>
+        </sc-if>
+
+        <!-- ============ MPOX — IMPROBABLE ============ -->
+        <sc-if value="{{ show.mpResI }}">
+          <div style="padding:16px 14px 26px">
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:16px;padding:20px 18px;text-align:center">
+              <div style="display:inline-block;background:#16a34a;color:#fff;font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 13px;border-radius:20px;margin-bottom:10px">CAS PEU PROBABLE</div>
+              <div style="font-size:20px;font-weight:700;color:#1a2230">Critères Mpox non réunis</div>
+              <div style="font-size:13px;color:#64748b;margin-top:6px;line-height:1.5">Éruption évocatrice et lien épidémiologique ne sont pas tous deux satisfaits.</div>
+            </div>
+            <div style="background:#eff6ff;border-left:3px solid #2563eb;border-radius:10px;padding:12px 13px;margin-top:14px;font-size:12.5px;color:#1d4ed8;line-height:1.5"><b>À réévaluer si</b> apparition de nouvelles lésions, exposition identifiée ou évolution.</div>
+            <div style="background:#fffbeb;border-left:3px solid #d97706;border-radius:10px;padding:12px 13px;margin-top:8px;font-size:12.5px;color:#92702a;line-height:1.5"><b>Diagnostics différentiels</b> — varicelle, zona, syphilis, herpès, IST éruptives.</div>
+            <div onClick="{{ restart }}" style="text-align:center;padding:14px;margin-top:14px;border:1.5px solid #dfe5ec;border-radius:14px;font-size:14px;font-weight:600;color:#475569;cursor:pointer">↺ Nouvelle évaluation</div>
+          </div>
+        </sc-if>
+
+        <!-- ============ FICHE RÉSUMÉ ============ -->
+        <sc-if value="{{ show.fiche }}">
+          <div style="padding:16px 14px 26px">
+            <div id="fiche-print" style="background:#fff;border:1px solid #eceff3;border-radius:18px;padding:20px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;border-bottom:1px solid #eceff3;padding-bottom:13px">
+                <div>
+                  <img src="assets/logo_horizontal.png" alt="REB RUN" style="display:block;height:36px;width:auto;margin-bottom:8px" /><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#94a3b5">Fiche de triage REB</div>
+                  <div style="font-size:18px;font-weight:700;color:#0f2d52;margin-top:3px">{{ fiche.agentName }}</div>
+                  <div style="font-size:11.5px;color:#8a99ab;margin-top:2px">{{ etab }} · SMIT — Unité REB</div>
+                </div>
+                <div style="{{ fiche.badgeStyle }}">{{ fiche.badge }}</div>
+              </div>
+
+              <div style="display:flex;gap:18px;margin-top:13px">
+                <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:#94a3b5;font-weight:700">Date / heure</div><div style="font-size:13px;color:#1a2230;font-weight:600;margin-top:2px">{{ fiche.date }}</div></div>
+                <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:#94a3b5;font-weight:700">Famille</div><div style="font-size:13px;color:#1a2230;font-weight:600;margin-top:2px">{{ fiche.family }}</div></div>
+              </div>
+
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#0f2d52;margin:16px 0 8px">Critères retenus</div>
+              <sc-if value="{{ fiche.hasCriteria }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <sc-for list="{{ fiche.criteria }}" as="c" hint-placeholder-count="3">
+                    <div style="display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:#283443;line-height:1.45"><span style="color:#0057a8;font-weight:700;flex-shrink:0">›</span><span>{{ c }}</span></div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ fiche.noCriteria }}">
+                <div style="font-size:12.5px;color:#8a99ab;font-style:italic">Aucun critère spécifique retenu.</div>
+              </sc-if>
+
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#0f2d52;margin:16px 0 8px">Conduite à tenir</div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <sc-for list="{{ fiche.actions }}" as="a" hint-placeholder-count="3">
+                  <div style="display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:#283443;line-height:1.45"><span style="color:#c0392b;font-weight:700;flex-shrink:0">•</span><span>{{ a }}</span></div>
+                </sc-for>
+              </div>
+
+              <div style="border-top:1px solid #eceff3;margin-top:16px;padding-top:11px;font-size:10.5px;color:#9aa7b6;line-height:1.55">Infectiologue REB SMIT Nord&nbsp;: 02 62 26 76 51 · ARS OI&nbsp;: 02 62 93 94 13 · SAMU&nbsp;: 15<br>Aide à la décision — ne se substitue pas à l'avis de l'infectiologue référent.</div>
+            </div>
+
+            <div class="noprint" style="display:flex;gap:9px;margin-top:14px">
+              <div onClick="{{ doPrint }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#0057a8;border-radius:14px;padding:14px;font-size:13.5px;font-weight:600;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,87,168,.25)">🖨 Imprimer</div>
+              <div onClick="{{ doShare }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#fff;border:1.5px solid #dfe5ec;border-radius:14px;padding:14px;font-size:13.5px;font-weight:600;color:#0057a8;cursor:pointer">{{ shareLabel }}</div>
+            </div>
+            <div class="noprint" onClick="{{ restart }}" style="text-align:center;padding:14px;margin-top:9px;border:1.5px solid #dfe5ec;border-radius:14px;font-size:14px;font-weight:600;color:#475569;cursor:pointer">↺ Nouveau patient</div>
+          </div>
+        </sc-if>
+
+        <!-- ============ CONTACTS ============ -->
+        <sc-if value="{{ show.contacts }}">
+          <div style="padding:18px 16px 26px">
+            <div style="font-size:13px;color:#64748b;margin-bottom:14px;line-height:1.5">Numéros d'astreinte — appuyer pour appeler.</div>
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ contactsList }}" as="c" hint-placeholder-count="4">
+                <a href="{{ c.href }}" style="text-decoration:none;background:#fff;border:1px solid #eceff3;border-radius:16px;padding:15px 16px;display:flex;align-items:center;gap:13px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+                  <div style="width:44px;height:44px;border-radius:13px;background:#eaf2fb;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#0057a8;font-size:19px">☎</div>
+                  <div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;color:#0f2d52;line-height:1.25">{{ c.name }}</div><div style="font-size:11.5px;color:#8a99ab;margin-top:2px">{{ c.sub }}</div></div>
+                  <div style="font-size:15px;font-weight:700;color:#0057a8;white-space:nowrap">{{ c.disp }}</div>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ SETTINGS / ZONES ============ -->
+        <sc-if value="{{ show.settings }}">
+          <div style="padding:18px 16px 26px">
+            <!-- remote config -->
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:16px;padding:16px;margin-bottom:18px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="font-size:14px;font-weight:700;color:#0f2d52">Mise à jour automatique des zones</div>
+              <div style="font-size:12px;color:#64748b;margin-top:4px;line-height:1.5">URL d'un fichier JSON distant (Gist, raw GitHub…) listant les zones à risque, pour tous les pathogènes.</div>
+              <input value="{{ zoneUrl }}" onInput="{{ onZoneUrl }}" placeholder="https://…/zones.json" style="width:100%;margin-top:11px;padding:11px 13px;border:1.5px solid #dfe5ec;border-radius:11px;font-size:12.5px;color:#1a2230;font-family:inherit;outline:none" />
+              <div style="display:flex;gap:9px;margin-top:10px">
+                <div onClick="{{ loadZones }}" style="flex:1;text-align:center;padding:11px;border-radius:11px;background:#0057a8;color:#fff;font-size:13px;font-weight:600;cursor:pointer">Synchroniser</div>
+                <div onClick="{{ resetZones }}" style="padding:11px 14px;border-radius:11px;border:1.5px solid #dfe5ec;color:#475569;font-size:13px;font-weight:600;cursor:pointer">Défaut</div>
+              </div>
+              <div style="{{ zoneStatusStyle }}">{{ zoneStatus }}</div>
+              <details style="margin-top:11px">
+                <summary style="font-size:12px;font-weight:600;color:#0057a8;cursor:pointer;list-style:none">Format du fichier JSON attendu ›</summary>
+                <div style="margin-top:8px;font-size:11px;color:#64748b;line-height:1.5">Le fichier peut contenir une ou plusieurs des clés <b>fhv</b> (par agent), <b>mers</b>, <b>mpox</b>. Toute clé absente conserve la valeur intégrée.</div>
+                <pre style="margin:8px 0 0;background:#0f2d52;color:#cfe2fb;border-radius:10px;padding:11px 12px;font-size:10.5px;line-height:1.5;overflow-x:auto;white-space:pre;font-family:ui-monospace,Menlo,Consolas,monospace">{
+  "fhv": {
+    "eb":      [{ "tag":"RDC", "name":"Ituri", "cap":"Bunia", "risk":"high" }],
+    "marburg": [{ "tag":"…",   "name":"…",     "cap":"…",     "risk":"medium" }],
+    "lassa":   [ … ],
+    "fhcc":    [ … ]
+  },
+  "mers": ["Arabie Saoudite", "Qatar", "…"],
+  "mpox": ["RDC", "Madagascar", "…"]
+}</pre>
+                <div style="margin-top:7px;font-size:11px;color:#8a99ab;line-height:1.5"><b>risk</b> : « high » (rouge) ou « medium » (orange). FHV = liste d'objets ; MERS / Mpox = simple liste de pays.</div>
+              </details>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#c0392b;margin-bottom:9px">Zones FHV / REB</div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px">
+              <sc-for list="{{ allFhvZones }}" as="g" hint-placeholder-count="4">
+                <div>
+                  <div style="font-size:12.5px;font-weight:700;color:#0f2d52;margin-bottom:7px;display:flex;align-items:center;gap:7px"><span style="{{ g.dot }}"></span>{{ g.short }} <span style="font-weight:400;color:#8a99ab;font-size:11px">· {{ g.windowTxt }} j</span></div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                    <sc-for list="{{ g.zones }}" as="z" hint-placeholder-count="2">
+                      <div style="{{ z.box }}"><div style="{{ z.tagStyle }}">{{ z.tag }}</div><div style="font-size:13.5px;font-weight:600;color:#1a2230;margin-top:2px">{{ z.name }}</div><div style="font-size:11px;color:#7a8a9a;margin-top:1px">{{ z.cap }}</div></div>
+                    </sc-for>
+                  </div>
+                  <sc-if value="{{ g.isEbola }}">
+                    <a href="https://www.coreb.infectiologie.com/UserFiles/File/procedures/2025118-fiche-coreb-fhv-ebola.pdf" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:9px;text-decoration:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:11px;padding:11px 13px;margin-top:9px">
+                      <span style="flex-shrink:0;width:40px;text-align:center;font-size:9px;font-weight:700;color:#fff;background:#16a34a;border-radius:7px;padding:5px 3px;line-height:1.15">COREB</span>
+                      <span style="flex:1;min-width:0;font-size:12px;color:#15803d;line-height:1.4"><b>Vérifier la source Ebola ↗</b><br/><span style="color:#3f8757">Fiche COREB Ebola — zones à risque officielles (garde-fou manuel)</span></span>
+                    </a>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#0d9488;margin-bottom:9px">Pays à risque MERS-CoV</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;background:#f0fdfa;border:1px solid #99f6e4;border-radius:12px;padding:12px;margin-bottom:14px">
+              <sc-for list="{{ merZones }}" as="z" hint-placeholder-count="7">
+                <div style="background:#0d9488;color:#fff;border-radius:20px;padding:4px 11px;font-size:12px;font-weight:500">{{ z }}</div>
+              </sc-for>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#7c3aed;margin-bottom:9px">Zones clade I — Mpox</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:12px;padding:12px;margin-bottom:16px">
+              <sc-for list="{{ mpZones }}" as="z" hint-placeholder-count="5">
+                <div style="background:#7c3aed;color:#fff;border-radius:20px;padding:4px 11px;font-size:12px;font-weight:500">{{ z }}</div>
+              </sc-for>
+            </div>
+
+            <a href="https://www.santepubliquefrance.fr" target="_blank" style="display:flex;align-items:center;gap:8px;text-decoration:none;background:#eff6ff;border-radius:12px;padding:12px 14px;font-size:12.5px;font-weight:600;color:#1d4ed8">↗ Vérifier les zones actives — santepubliquefrance.fr</a>
+            <div style="font-size:10.5px;color:#9aa7b6;margin-top:11px;line-height:1.6">Données par défaut intégrées au 27/05/2026 (Santé publique France).</div>
+
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#0f2d52;margin:20px 0 9px">Sources officielles — où mettre à jour les zones</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ sources }}" as="src" hint-placeholder-count="6">
+                <a href="{{ src.url }}" target="_blank" style="text-decoration:none;background:#fff;border:1px solid #eceff3;border-radius:13px;padding:12px 13px;display:flex;align-items:center;gap:11px;box-shadow:0 1px 2px rgba(16,42,77,.04)">
+                  <div style="{{ src.badge }}">{{ src.tag }}</div>
+                  <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:#0f2d52;line-height:1.25">{{ src.name }}</div><div style="font-size:11px;color:#8a99ab;margin-top:2px;line-height:1.35">{{ src.note }}</div></div>
+                  <div style="font-size:15px;color:#cbd5e1">↗</div>
+                </a>
+              </sc-for>
+            </div>
+            <div style="font-size:10.5px;color:#9aa7b6;margin-top:11px;line-height:1.6">Référentiel de classement : définitions de cas HCSP / Santé publique France et fiches COREB Nationale. En cas de doute, l'infectiologue REB référent et le CNR FHV restent décisionnaires.</div>
+
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#0f2d52;margin:20px 0 9px">Références par pathogène</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ pathoRefs }}" as="p" hint-placeholder-count="6">
+                <div style="background:#fff;border:1px solid #eceff3;border-radius:13px;padding:12px 13px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 2px rgba(16,42,77,.04)">
+                  <span style="{{ p.dot }}"></span>
+                  <div style="flex:1;min-width:0;font-size:13px;font-weight:600;color:#0f2d52">{{ p.name }}</div>
+                  <a href="{{ p.coreb }}" target="_blank" style="{{ p.chip }}">COREB ↗</a>
+                  <a href="{{ p.def }}" target="_blank" style="{{ p.chip2 }}">{{ p.defLabel }} ↗</a>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:392,&quot;height&quot;:838},&quot;etablissement&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;CHU de La Réunion&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;veille&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { screen:'home', agent:'eb', ebSym:[], ebVA:[], ebVB:false, ebVC:false, ebSub:null, meClin:null, lastResult:null, zoneUrl:'', zoneStatus:'', zoneStatusKind:'', remoteFhv:null, remoteMers:null, remoteMpox:null, shared:false, mpCircuit:'adulte', mpSite:'nord' };
+
+  SYM = ['Fièvre ≥ 38 °C','Céphalées sévères','Asthénie','Myalgies / arthralgies','Vomissements','Diarrhée','Douleur abdominale','Saignements inexpliqués','Décès inexpliqué'];
+  EXP = ['Contact sang / fluides d\u2019un patient infecté ou suspecté','Hospitalisation ou visite dans un ES recevant ces patients','Contact direct avec un syndrome hémorragique ou un corps défunt sans EPI','Viande de chasse crue en zone de circulation','Laboratoire détenant souches / faune de zone','__RES__','Rapports sexuels avec une personne ayant développé la maladie'];
+  RES = { eb:'Contact chauves-souris frugivores, grottes ou mines', marburg:'Contact chauves-souris frugivores, grottes ou mines (réservoir Marburg)', lassa:'Contact avec des rongeurs (Mastomys) ou leurs excrétions', fhcc:'Morsure de tique ou contact avec sang / abattage de bétail' };
+
+  // Critères cliniques / expositions par agent — d'après fiches COREB Nationale
+  FHV = {
+    eb:{ short:'Ebola', name:'Maladie à virus Ebola', family:'Filovirus', window:21, color:'#dc2626', tint:'#fde0e0',
+      zones:[{tag:'RDC — Province',name:'Ituri',cap:'Bunia',risk:'high'},{tag:'RDC — Province',name:'Nord-Kivu',cap:'Goma',risk:'high'},{tag:'RDC — Province',name:'Sud-Kivu',cap:'Bukavu',risk:'high'},{tag:'Afrique de l\u2019Est',name:'Ouganda',cap:'Kampala',risk:'medium'}] },
+    marburg:{ short:'Marburg', name:'Maladie à virus Marburg', family:'Filovirus', window:21, color:'#b91c1c', tint:'#fbd5d5',
+      zones:[{tag:'Afrique de l\u2019Est',name:'Éthiopie',cap:'Épidémie 2025-26',risk:'high'},{tag:'Afrique de l\u2019Est',name:'Tanzanie · Rwanda',cap:'Épidémies récentes',risk:'high'},{tag:'Afrique centrale',name:'Guinée Équat. · RDC',cap:'',risk:'medium'},{tag:'Cas signalés',name:'Angola · Ouganda · Kenya',cap:'Ghana · Afr. du Sud',risk:'medium'}],
+      sym:['Fièvre > 38 °C de début brutal','Asthénie','Algies diffuses / myalgies','Céphalées','Douleurs abdominales','Conjonctivite','Toux / dyspnée / douleur thoracique','Après J5 : dysphagie, odynophagie','Après J5 : diarrhées, vomissements','Syndrome hémorragique','Méningo-encéphalite / encéphalopathie (tardif)'],
+      exp:['Contact étroit avec chauves-souris Rousettus (mines, grottes)','Contact direct avec fluides d\u2019un patient symptomatique / possible / confirmé / guéri','Contact indirect (objets, surfaces contaminés)','Participation à des cérémonies d\u2019inhumation','Contact avec un animal possiblement infecté'] },
+    lassa:{ short:'Lassa', name:'Fièvre de Lassa', family:'Arénavirus', window:21, color:'#c2410c', tint:'#fde4d3',
+      zones:[{tag:'Afrique de l\u2019Ouest',name:'Nigeria',cap:'Endémique · foyers ++',risk:'high'},{tag:'Afrique de l\u2019Ouest',name:'Sierra Leone · Libéria',cap:'',risk:'high'},{tag:'Afrique de l\u2019Ouest',name:'Guinée · Bénin · Togo',cap:'',risk:'medium'},{tag:'Afrique de l\u2019Ouest',name:'Ghana · Mali · RCA',cap:'Cameroun · RDC',risk:'medium'}],
+      sym:['Fièvre > 38 °C de début brutal','Asthénie','Algies diffuses / myalgies','Céphalées','Douleurs abdominales','Conjonctivite','Toux / dyspnée / douleur thoracique','Après J5 : dysphagie, odynophagie','Après J5 : diarrhées, vomissements','Syndrome hémorragique','Méningo-encéphalite / encéphalopathie (tardif)'],
+      exp:['Contact direct avec rongeurs Mastomys (rat plurimammaire)','Contact avec denrées / objets souillés par urines-déjections de rongeurs','Inhalation de poussières contaminées','Contact direct avec fluides d\u2019un patient symptomatique'] },
+    fhcc:{ short:'FHCC', name:'Fièvre hémorragique de Crimée-Congo', family:'Nairovirus (tique)', window:14, color:'#9d174d', tint:'#fbd5e6',
+      zones:[{tag:'Europe du Sud',name:'Espagne · Portugal',cap:'',risk:'medium'},{tag:'Balkans · Caucase',name:'Bulgarie · Grèce · Géorgie',cap:'Albanie · Ukraine · Russie',risk:'high'},{tag:'Moyen-Orient · Asie',name:'Turquie · Moyen-Orient',cap:'Afrique subsah.',risk:'high'},{tag:'France hexag.',name:'Pourtour méditerr.',cap:'Tiques détectées dès 2023',risk:'medium'}],
+      sym:['Fièvre > 38 °C d\u2019apparition brutale','Syndrome pseudo-grippal','Céphalées','Nausées / vomissements','Diarrhées','Poly-adénopathies','Phase hémorragique (J7-J10) : épistaxis, hématémèse, méléna','Ecchymoses cutanées / muqueuses','Troubles neuro · défaillance multiviscérale · choc / CIVD'],
+      exp:['Piqûre de tique Hyalomma (saison mars–septembre)','Contact avec fluides d\u2019animaux infectés (lièvres, bovins, ovins, caprins, équidés)','Abattage / manipulation de bétail ou de gibier','Contact avec fluides d\u2019un patient symptomatique confirmé'] }
+  };
+
+  MERZ = ['Arabie Saoudite','Bahreïn','Émirats Arabes Unis','Koweït','Oman','Qatar','Yémen'];
+  MPZ = ['Madagascar','RDC','Burundi','Ouganda','Rwanda','Rép. Centrafricaine'];
+  EPI_NE = ['Pyjama UU + surbottes','SHA','Double gants nitrile ML','Surblouse imp. / casaque','Cagoule','FFP2 (fit-check)','Lunettes couvrantes'];
+  EPI_EX = ['Pyjama UU + surbottes imp.','SHA','Double gants nitrile ML','Combinaison imp. type 3B','Cagoule','FFP2 (fit-check)','Heaume / lunettes','Tablier imp. si soins mouillants'];
+  MER_EPI = ['Masque FFP2 (FFP3 si aérosols)','Protection oculaire','Surblouse imp. UU','Gants UU','Charlotte / coiffe'];
+  MP_EPI = ['Masque FFP2','Protection oculaire','Surblouse imp. UU','Double gants UU','Charlotte / coiffe'];
+  CONTACTS = [
+    {name:'Infectiologue REB — SMIT Nord',sub:'Astreinte REB · 7j/7',tel:'0262267651',disp:'02 62 26 76 51'},
+    {name:'CNR FHV — Institut Pasteur',sub:'24h/24 · nuit 07 87 94 76 47',tel:'0437282440',disp:'04 37 28 24 40'},
+    {name:'ARS Océan Indien',sub:'Astreinte régionale',tel:'0262939413',disp:'02 62 93 94 13'},
+    {name:'SAMU — Centre 15',sub:'Urgence vitale',tel:'15',disp:'15'}
+  ];
+  FHV_ACTIONS = ['Isolement chambre seule, porte fermée, matériel dédié','Signalement ARS Océan Indien immédiat','Appel infectiologue REB SMIT Nord (02 62 26 76 51)','EPI groupe 4 — habillage encadré, ne jamais intervenir seul','Prélèvement CNR FHV (RT-PCR) après validation infectiologue','Surveillance des sujets-contacts selon niveau de risque'];
+  MERS_ACTIONS = ['Isolement « air + contact » sans délai (chambre seule)','Masque chirurgical porté par le patient','Signalement infectiologue référent + ARS','Prélèvements respiratoires voies basses après validation','RT-PCR MERS-CoV réalisée sur place (labo CHU) — DO si confirmé'];
+  MPOX_ACTIONS = ['Isolement « contact + gouttelettes » (air si forme grave / clade I)','Couvrir les lésions, masque chirurgical patient','Signalement ARS + infectiologue référent','Prélèvement de lésion + écouvillon oropharyngé — PCR orthopoxvirus (triple emballage, pas de pneumatique)','Adulte NORD : jour ouvré → avis 40464 ou CeGIDD 02 62 90 55 69 ; hors horaires → astreinte 0692 26 76 51 (prélèvement CeGIDD le lendemain) ; signe de gravité → urgences','Adulte SUD : jours ouvrés → CeGIDD 02 62 35 96 30 ; nuit/WE/férié ou hospit → urgences infectieuses dédiées (cf. protocole CHU Sud)','Enfant : NORD sénior UHCD péd 40210 (< 6 ans PEC conjointe infectiologue) ; SUD pédiatre de garde DECT 55194, box chambre 105 UHCD ; précautions contact + respiratoire'];
+
+  DEFAULT_ZONE_URL = 'https://docluc974.github.io/Triage-REB/zones-multi-pathogenes.json';
+
+  componentDidMount(){
+    let u=this.DEFAULT_ZONE_URL;
+    try{ const saved=localStorage.getItem('reb_zone_url'); if(saved) u=saved; }catch(e){}
+    this.setState({zoneUrl:u});
+    // Synchro automatique au lancement (silencieuse, repli hors-ligne)
+    this.autoSyncZones(u);
+  }
+
+  autoSyncZones = async (url)=>{
+    if(!url) return;
+    try{
+      const res=await fetch(url,{cache:'no-store'}); if(!res.ok) throw new Error('HTTP '+res.status);
+      const data=await res.json();
+      const z=this.normalizeZones(data);
+      if(!z.fhv && !z.mers && !z.mpox) return;
+      try{ localStorage.setItem('reb_zone_url',url); }catch(e){}
+      this.setState({remoteFhv:z.fhv,remoteMers:z.mers,remoteMpox:z.mpox,zoneStatus:'✓ Zones synchronisées automatiquement ('+this.now()+').',zoneStatusKind:'ok'});
+    }catch(err){ /* hors-ligne : on garde les dernières zones connues, aucune alerte */ }
+  };
+
+  scrollTop(){ requestAnimationFrame(()=>{ const el=document.getElementById('reb-scroll'); if(el) el.scrollTop=0; }); }
+  go = (s)=>{ this.setState({screen:s,shared:false}); this.scrollTop(); };
+  goHome = ()=>this.go('home');
+  goContacts = ()=>this.go('contacts');
+  goSettings = ()=>this.go('settings');
+  goFiche = ()=>this.go('fiche');
+
+  ag(){ const f=this.FHV[this.state.agent]||this.FHV.eb; const rz=this.state.remoteFhv&&this.state.remoteFhv[this.state.agent]; return rz?Object.assign({},f,{zones:rz}):f; }
+
+  startFhv = (k)=>{ this.setState({agent:k,screen:'eb_clin',ebSym:[],ebVA:[],ebVB:false,ebVC:false,ebSub:null}); this.scrollTop(); };
+  startMers = ()=>{ this.setState({screen:'me_intro',meClin:null}); this.scrollTop(); };
+  startMpox = ()=>{ this.setState({screen:'mp_intro'}); this.scrollTop(); };
+  restart = ()=>{ this.setState({lastResult:null}); this.go('home'); };
+
+  back = ()=>{
+    const m={ eb_clin:'home', eb_zone:'eb_clin', eb_crit:'eb_zone', eb_profil:'eb_crit', eb_res:'eb_profil', eb_none:'home', eb_exclu:'home',
+      me_intro:'home', me_clin:'me_intro', me_immuno:'me_clin', me_expo:'me_clin', me_res_p:'me_expo', me_res_i:'me_clin',
+      mp_intro:'home', mp_clin:'mp_intro', mp_epi:'mp_clin', mp_res_p:'mp_epi', mp_res_i:'mp_clin',
+      fiche:'home', contacts:'home', settings:'home' };
+    this.go(m[this.state.screen]||'home');
+  };
+
+  toggleSym = (i)=>{ const a=this.state.ebSym.slice(); const k=a.indexOf(i); k<0?a.push(i):a.splice(k,1); this.setState({ebSym:a}); };
+  toggleExp = (i)=>{ const a=this.state.ebVA.slice(); const k=a.indexOf(i); k<0?a.push(i):a.splice(k,1); this.setState({ebVA:a}); };
+  toggleVB = ()=>this.setState({ebVB:!this.state.ebVB});
+  toggleVC = ()=>this.setState({ebVC:!this.state.ebVC});
+  setSubNe = ()=>this.setState({ebSub:'ne'});
+  setSubEx = ()=>this.setState({ebSub:'ex'});
+
+  fhvSymList(){ const a=this.ag(); return a.sym||this.SYM; }
+  fhvExpList(){ const a=this.ag(); if(a.exp) return a.exp; return this.EXP.map(t=> t==='__RES__' ? (this.RES[this.state.agent]||this.RES.eb) : t); }
+
+  setResult(r){ this.setState({lastResult:r}); }
+  now(){ const d=new Date(); const p=n=>String(n).padStart(2,'0'); return p(d.getDate())+'/'+p(d.getMonth()+1)+'/'+d.getFullYear()+' '+p(d.getHours())+'h'+p(d.getMinutes()); }
+
+  ebClinNone = ()=>{ const a=this.ag(); this.setResult({agentName:a.name,short:a.short,family:a.family,badge:'PAS DE SUSPICION',kind:'green',date:this.now(),criteria:['Aucun signe clinique évocateur'],actions:['Prise en charge habituelle','Réévaluer en cas de doute ou d\u2019évolution']}); this.go('eb_none'); };
+  ebClinNext = ()=>{ if(this.state.ebSym.length>0) this.go('eb_zone'); };
+  ebZoneNo = ()=>{ const a=this.ag(); this.setResult({agentName:a.name,short:a.short,family:a.family,badge:'PAS DE SUSPICION',kind:'green',date:this.now(),criteria:['Signes évocateurs mais pas de séjour en zone de circulation ≤ '+a.window+' j'],actions:['Prise en charge habituelle','Réévaluer en cas de doute ou d\u2019évolution']}); this.go('eb_none'); };
+  ebZoneYes = ()=>this.go('eb_crit');
+  ebCritNone = ()=>{ const a=this.ag(); this.setResult({agentName:a.name,short:a.short,family:a.family,badge:'CAS EXCLU',kind:'blue',date:this.now(),criteria:this.fhvCriteriaList(),actions:['Levée d\u2019isolement après avis infectiologue REB','Si exclusion impossible → conférence CNR FHV + ESR + ARS + SPF']}); this.go('eb_exclu'); };
+  ebCritNext = ()=>{ if(this.state.ebVA.length>0||this.state.ebVB||this.state.ebVC) this.go('eb_profil'); };
+  ebProfilNext = ()=>{ if(this.state.ebSub){ const a=this.ag(); const ex=this.state.ebSub==='ex'; this.setResult({agentName:a.name,short:a.short,family:a.family,badge:'CAS POSSIBLE',kind:'red',date:this.now(),criteria:this.fhvCriteriaList().concat([ex?'Profil : excréteur / avéré':'Profil : non excréteur']),actions:this.FHV_ACTIONS}); this.go('eb_res'); } };
+
+  fhvCriteriaList(){
+    const a=this.ag(); const out=[];
+    const sl=this.fhvSymList(); const syms=this.state.ebSym.map(i=>sl[i]); if(syms.length) out.push('Clinique : '+syms.join(', '));
+    out.push('Séjour en zone de circulation ≤ '+a.window+' jours');
+    const exps=this.state.ebVA.map(i=>this.fhvExpList()[i]); if(exps.length) out.push('Voie A : '+exps.join(' ; '));
+    if(this.state.ebVB) out.push('Voie B : exposition impossible à évaluer');
+    if(this.state.ebVC) out.push('Voie C : triade fièvre + signes généraux + hémorragie');
+    return out;
+  }
+
+  meStart = ()=>this.go('me_clin');
+  meClinSevere = ()=>{ this.setState({meClin:'severe'}); this.go('me_expo'); };
+  meClinIra = ()=>{ this.setState({meClin:'ira'}); this.go('me_expo'); };
+  meClinImmuno = ()=>this.go('me_immuno');
+  meClinNone = ()=>{ this.mersImprobable('Pas de tableau respiratoire ni syndrome compatible'); };
+  meImmunoYes = ()=>{ this.setState({meClin:'severe'}); this.go('me_expo'); };
+  meImmunoNo = ()=>{ this.mersImprobable('Immunodéprimé sans syndrome compatible'); };
+  mersClinLabel(){ return {severe:'Tableau clinique sévère (SDRA / pneumopathie hypoxémiante)',ira:'Infection respiratoire aiguë (IRA)'}[this.state.meClin]||'Tableau compatible'; }
+  mersPossible = (expo)=>{ this.setResult({agentName:'MERS-CoV',short:'MERS-CoV',family:'Coronavirus',badge:'CAS POSSIBLE',kind:'red',date:this.now(),criteria:['Clinique : '+this.mersClinLabel(),'Exposition (14 j) : '+expo],actions:this.MERS_ACTIONS}); this.go('me_res_p'); };
+  mersImprobable = (why)=>{ this.setResult({agentName:'MERS-CoV',short:'MERS-CoV',family:'Coronavirus',badge:'CAS PEU PROBABLE',kind:'green',date:this.now(),criteria:[why],actions:['Précautions standard','Diagnostics différentiels respiratoires (grippe, SARS-CoV-2…)','Réévaluer si évolution ou nouvelle exposition']}); this.go('me_res_i'); };
+  meExpoVoyage = ()=>this.mersPossible('Voyage / séjour en pays à risque');
+  meExpoContact = ()=>this.mersPossible('Contact avec un cas possible / confirmé symptomatique');
+  meExpoSoins = ()=>this.mersPossible('Activité pro / hospitalisation en ES en pays à risque');
+  meExpoDromadaire = ()=>this.mersPossible('Contact proche avec dromadaire ou produit dérivé');
+  meExpoNone = ()=>this.mersImprobable('Aucune exposition à risque dans les 14 jours');
+
+  mpStart = ()=>this.go('mp_clin');
+  mpClinLabel = '';
+  mpClinErup = ()=>{ this.mpClinLabel='Éruption vésiculo-pustuleuse évocatrice'; this.go('mp_epi'); };
+  mpClinFebr = ()=>{ this.mpClinLabel='Phase prodromique fébrile (fièvre, poly-adénopathies, énanthème débutant)'; this.go('mp_epi'); };
+  mpClinNone = ()=>this.mpoxImprobable('Aucune éruption compatible');
+  mpoxPossible = (epi)=>{ this.setResult({agentName:'Mpox / Variole',short:'Mpox',family:'Orthopoxvirus',badge:'CAS POSSIBLE',kind:'purple',date:this.now(),criteria:['Clinique : '+this.mpClinLabel,'Lien épidémiologique (21 j) : '+epi],actions:this.MPOX_ACTIONS}); this.go('mp_res_p'); };
+  mpoxImprobable = (why)=>{ this.setResult({agentName:'Mpox / Variole',short:'Mpox',family:'Orthopoxvirus',badge:'CAS PEU PROBABLE',kind:'green',date:this.now(),criteria:[why],actions:['Précautions standard','Diagnostics différentiels : varicelle, zona, syphilis, herpès','Réévaluer si nouvelles lésions ou exposition']}); this.go('mp_res_i'); };
+  mpEpiContact = ()=>this.mpoxPossible('Contact avec un cas confirmé / probable');
+  mpEpiVoyage = ()=>this.mpoxPossible('Voyage en zone de circulation clade I');
+  mpEpiMada = ()=>this.mpoxPossible('Voyage à Madagascar (ajout local — zone à risque supplémentaire)');
+  mpEpiReseau = ()=>this.mpoxPossible('Partenaires multiples / réseau à risque');
+  mpEpiAnimal = ()=>this.mpoxPossible('Contact animal (rongeurs / primates importés)');
+  mpEpiNone = ()=>this.mpoxImprobable('Aucun lien épidémiologique identifié');
+  setMpAdulte = ()=>this.setState({mpCircuit:'adulte'});
+  setMpEnfant = ()=>this.setState({mpCircuit:'enfant'});
+  setMpNord = ()=>this.setState({mpSite:'nord'});
+  setMpSud = ()=>this.setState({mpSite:'sud'});
+
+  doPrint = ()=>{ try{ window.print(); }catch(e){} };
+  doShare = ()=>{
+    const lr=this.state.lastResult; if(!lr) return;
+    const txt='TRIAGE REB — '+lr.agentName+'\n'+lr.badge+' · '+lr.date+'\n\nCritères :\n- '+lr.criteria.join('\n- ')+'\n\nConduite à tenir :\n- '+lr.actions.join('\n- ')+'\n\nInfectiologue REB : 02 62 26 76 51';
+    if(navigator.share){ navigator.share({title:'Triage REB — '+lr.agentName,text:txt}).catch(()=>{}); }
+    else if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>this.setState({shared:true})).catch(()=>{}); }
+    else { this.setState({shared:true}); }
+  };
+
+  // Accepte 2 formats : (1) format simple {fhv:{eb,marburg,lassa,fhcc}, mers:[...], mpox:[...]}
+  // (2) format riche multi-pathogènes {zones:[...](=Ebola), autres_pathogenes_reb:{lassa,marburg,fhcc,mers_cov,mpox}}
+  normalizeZones(data){
+    const out={fhv:null,mers:null,mpox:null};
+    if(!data||typeof data!=='object') return out;
+    // Format simple (legacy)
+    if(data.fhv || Array.isArray(data.mers) || Array.isArray(data.mpox)){
+      out.fhv=data.fhv||null;
+      out.mers=Array.isArray(data.mers)?data.mers:null;
+      out.mpox=Array.isArray(data.mpox)?data.mpox:null;
+      return out;
+    }
+    // Format riche
+    const mapZone=(z)=>{
+      const name=z.name||z.country||'';
+      const country=z.country||'';
+      const tag=(!country||name===country)?'Pays à risque':country;
+      return { tag, name, cap:z.capital||z.cap||'', risk:(z.risk==='high'?'high':'medium') };
+    };
+    const fhv={};
+    if(Array.isArray(data.zones)) fhv.eb=data.zones.map(mapZone);
+    const ap=data.autres_pathogenes_reb||{};
+    ['lassa','marburg','fhcc'].forEach(k=>{ if(ap[k]&&Array.isArray(ap[k].zones)) fhv[k]=ap[k].zones.map(mapZone); });
+    if(Object.keys(fhv).length) out.fhv=fhv;
+    const mersSrc=ap.mers_cov||ap.mers;
+    if(mersSrc&&Array.isArray(mersSrc.zones)) out.mers=mersSrc.zones.map(z=>z.name||z.country);
+    if(ap.mpox&&Array.isArray(ap.mpox.zones)) out.mpox=ap.mpox.zones.map(z=>z.name||z.country);
+    return out;
+  }
+
+  onZoneUrl = (e)=>this.setState({zoneUrl:e.target.value});
+  resetZones = ()=>{ try{ localStorage.removeItem('reb_zone_url'); }catch(e){} this.setState({zoneUrl:this.DEFAULT_ZONE_URL,remoteFhv:null,remoteMers:null,remoteMpox:null,zoneStatus:'Zones réinitialisées (valeurs intégrées à l\u2019app).',zoneStatusKind:'ok'}); };
+  loadZones = async ()=>{
+    const url=this.state.zoneUrl.trim();
+    if(!url){ this.setState({zoneStatus:'Saisissez une URL de configuration.',zoneStatusKind:'err'}); return; }
+    this.setState({zoneStatus:'Synchronisation en cours…',zoneStatusKind:'pending'});
+    try{
+      const res=await fetch(url,{cache:'no-store'}); if(!res.ok) throw new Error('HTTP '+res.status);
+      const data=await res.json();
+      const z=this.normalizeZones(data);
+      if(!z.fhv && !z.mers && !z.mpox) throw new Error('Format non reconnu (ni « fhv/mers/mpox », ni « zones/autres_pathogenes_reb »)');
+      try{ localStorage.setItem('reb_zone_url',url); }catch(e){}
+      this.setState({remoteFhv:z.fhv,remoteMers:z.mers,remoteMpox:z.mpox,zoneStatus:'✓ Zones mises à jour depuis la source distante ('+this.now()+').',zoneStatusKind:'ok'});
+    }catch(err){
+      this.setState({zoneStatus:'⚠ Échec : '+err.message+'. Vérifiez l\u2019URL et les autorisations (CORS).',zoneStatusKind:'err'});
+    }
+  };
+
+  pillStyle(on){ return 'display:flex;align-items:center;gap:11px;padding:12px 14px;border-radius:13px;cursor:pointer;font-size:13.5px;line-height:1.35;border:1.5px solid '+(on?'#0057a8':'#dfe5ec')+';background:'+(on?'#eaf2fb':'#fff')+';color:'+(on?'#0a4d92':'#283443'); }
+  pillDot(on){ return 'width:18px;height:18px;border-radius:50%;flex-shrink:0;border:2px solid '+(on?'#0057a8':'#cbd5e1')+';background:'+(on?'#0057a8':'#fff'); }
+  chkStyle(on){ return 'display:flex;align-items:flex-start;gap:11px;padding:12px 14px;border-radius:13px;cursor:pointer;font-size:13px;line-height:1.45;border:1.5px solid '+(on?'#f87171':'#dfe5ec')+';background:'+(on?'#fef2f2':'#fff')+';color:'+(on?'#b3322a':'#283443'); }
+  chkBox(on){ return 'width:20px;height:20px;border-radius:6px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;border:2px solid '+(on?'#dc2626':'#cbd5e1')+';background:'+(on?'#dc2626':'#fff'); }
+
+  zoneCardStyles(z){ const high=z.risk==='high'; return { tag:z.tag, name:z.name, cap:z.cap,
+    box:'background:#fff;border:1px solid #eceff3;border-left:3px solid '+(high?'#dc2626':'#ea9a3e')+';border-radius:12px;padding:11px 12px',
+    tagStyle:'font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:'+(high?'#c0392b':'#b06a16') }; }
+
+  renderVals(){
+    const s=this.state, sc=s.screen, a=this.ag();
+    const show={ home:sc==='home', ebClin:sc==='eb_clin', ebZone:sc==='eb_zone', ebCrit:sc==='eb_crit', ebProfil:sc==='eb_profil', ebRes:sc==='eb_res', ebNone:sc==='eb_none', ebExclu:sc==='eb_exclu',
+      meIntro:sc==='me_intro', meClin:sc==='me_clin', meImmuno:sc==='me_immuno', meExpo:sc==='me_expo', meResP:sc==='me_res_p', meResI:sc==='me_res_i',
+      mpIntro:sc==='mp_intro', mpClin:sc==='mp_clin', mpEpi:sc==='mp_epi', mpResP:sc==='mp_res_p', mpResI:sc==='mp_res_i',
+      fiche:sc==='fiche', contacts:sc==='contacts', settings:sc==='settings' };
+    const isEb=sc.indexOf('eb_')===0, isMe=sc.indexOf('me_')===0, isMp=sc.indexOf('mp_')===0;
+    const barTitle = sc==='home'?'Triage REB': isEb?(a.short+' · FHV'): isMe?'MERS-CoV': isMp?'Mpox / Variole': sc==='fiche'?'Fiche résumé': sc==='contacts'?'Contacts d\u2019urgence':'Zones & paramètres';
+    const etab=this.props.etablissement||'CHU de La Réunion';
+    const barSub = sc==='home'?(etab+' · SMIT — Unité REB'): isEb?a.name: isMe?'Coronavirus respiratoire': isMp?'Orthopoxvirose éruptive': sc==='fiche'?'À imprimer / partager': sc==='contacts'?'Astreintes REB / ESR':'Définition de cas';
+
+    const stepNames=['Clinique','Zone','Critères','Profil'];
+    const ebCur={eb_clin:0,eb_zone:1,eb_crit:2,eb_profil:3,eb_res:3}[sc];
+    const ebSteps=stepNames.map((l,i)=>{ const st=i<ebCur?'done':i===ebCur?'active':'todo'; const active=st!=='todo';
+      return { l, mark: st==='done'?'✓':String(i+1),
+        dot:'width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;position:relative;z-index:1;border:1.5px solid '+(active?'#0057a8':'#cbd5e1')+';background:'+(active?'#0057a8':'#fff')+';color:'+(active?'#fff':'#94a3b5'),
+        lab:'font-size:10px;margin-top:5px;line-height:1.1;text-align:center;color:'+(active?'#0057a8':'#a0aec0')+';font-weight:'+(active?'600':'400'),
+        line: i===3?'display:none':'position:absolute;top:13px;left:50%;width:100%;height:2px;z-index:0;background:'+(i<ebCur?'#0057a8':'#e2e8f0') }; });
+
+    const meCur={me_clin:1,me_immuno:1,me_expo:2,mp_clin:1,mp_epi:2}[sc]||0;
+    const meSteps=isMp?2:3;
+    const meDots=[];
+    for(let i=0;i<3;i++){ if(isMp&&i>=2) break; meDots.push({ style:'flex:1;height:5px;border-radius:3px;background:'+(i<meCur?(isMp?'#7c3aed':'#0d9488'):'#e2e8f0') }); }
+
+    const ebSymItems=this.fhvSymList().map((label,i)=>{ const on=s.ebSym.includes(i); return {label,onClick:()=>this.toggleSym(i),style:this.pillStyle(on),dot:this.pillDot(on)}; });
+    const expList=this.fhvExpList();
+    const ebExpItems=expList.map((label,i)=>{ const on=s.ebVA.includes(i); return {label,onClick:()=>this.toggleExp(i),style:this.chkStyle(on),cb:this.chkBox(on),mark:on?'✓':''}; });
+    const nSym=s.ebSym.length, anyCrit=s.ebVA.length>0||s.ebVB||s.ebVC;
+    const primaryOn='flex:1.4;padding:14px;border-radius:14px;border:none;text-align:center;font-size:13.5px;font-weight:600;color:#fff;cursor:pointer;background:#0057a8;box-shadow:0 2px 8px rgba(0,87,168,.25)';
+    const primaryOff='flex:1.4;padding:14px;border-radius:14px;border:none;text-align:center;font-size:13.5px;font-weight:600;color:#fff;background:#b9c4d2;cursor:not-allowed';
+
+    const ebZoneCards=a.zones.map(z=>this.zoneCardStyles(z));
+
+    const ex=s.ebSub==='ex';
+    const ebHeroStyle='border-radius:16px;padding:20px 18px;text-align:center;background:'+(ex?'#fef2f2':'#fffbeb')+';border:1px solid '+(ex?'#fecaca':'#fde68a');
+    const ebHeroBadge='width:40px;height:40px;border-radius:50%;margin:0 auto 11px;background:'+(ex?'#dc2626':'#d97706')+';box-shadow:0 0 0 6px '+(ex?'#fde0e0':'#fdf0d3');
+
+    const subRad=(on,col)=>'width:20px;height:20px;border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;border:2px solid '+(on?col:'#cbd5e1')+';'+(on?'background:'+col:'background:#fff');
+    const subBox=(on,col,bg)=>'border-radius:14px;padding:14px;cursor:pointer;display:flex;gap:12px;border:1.5px solid '+(on?col:'#dfe5ec')+';background:'+(on?bg:'#fff');
+
+    // cas-contact table (FHV)
+    const w=a.window;
+    const contactRows=[
+      {level:'Risque négligeable',def:'Contact à distance, partage d\u2019un espace sans contact physique ni exposition aux fluides.',cat:'Pas de suivi spécifique · information du sujet.',dot:'width:9px;height:9px;border-radius:50%;background:#16a34a;flex-shrink:0',box:'background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:11px 13px'},
+      {level:'Risque intermédiaire',def:'Contact physique direct ou face-à-face prolongé sans EPI · manipulation de linge / échantillons.',cat:'Surveillance active '+w+' j · température 2×/j · joignable.',dot:'width:9px;height:9px;border-radius:50%;background:#d97706;flex-shrink:0',box:'background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:11px 13px'},
+      {level:'Risque élevé',def:'Exposition percutanée / muqueuse aux fluides, AES, soins ou funérailles sans EPI.',cat:'Surveillance renforcée '+w+' j + référent · restrictions selon avis ARS.',dot:'width:9px;height:9px;border-radius:50%;background:#dc2626;flex-shrink:0',box:'background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:11px 13px'}
+    ];
+
+    // FHV home cards
+    const fhvCards=Object.keys(this.FHV).map(k=>{ const f=this.FHV[k]; return { short:f.short, full:f.name, family:f.family, onClick:()=>this.startFhv(k),
+      dot:'display:block;width:16px;height:16px;border-radius:50%;background:'+f.color+';box-shadow:0 0 0 4px '+f.tint }; });
+
+    // settings: all fhv zones
+    const allFhvZones=Object.keys(this.FHV).map(k=>{ const f=this.FHV[k]; const rz=s.remoteFhv&&s.remoteFhv[k]; const zones=(rz||f.zones).map(z=>this.zoneCardStyles(z));
+      return { short:f.short, windowTxt:String(f.window), zones, isEbola:(k==='eb'), dot:'width:7px;height:7px;border-radius:50%;background:'+f.color+';display:inline-block' }; });
+
+    const zoneStatusStyle='font-size:11.5px;line-height:1.5;margin-top:9px;color:'+(s.zoneStatusKind==='err'?'#b3322a':s.zoneStatusKind==='ok'?'#15803d':'#64748b')+(s.zoneStatus?'':';display:none');
+
+    // fiche
+    const lr=s.lastResult;
+    const badgeColors={red:['#dc2626','#fef2f2','#fecaca'],green:['#16a34a','#f0fdf4','#bbf7d0'],blue:['#2563eb','#eff6ff','#bfdbfe'],purple:['#7c3aed','#f5f3ff','#ddd6fe']};
+    const bc=lr?(badgeColors[lr.kind]||badgeColors.red):badgeColors.red;
+    const fiche = {
+      agentName: lr?lr.agentName:'—', family: lr?lr.family:'—', date: lr?lr.date:'—', badge: lr?lr.badge:'—',
+      badgeStyle:'flex-shrink:0;font-size:10.5px;font-weight:700;letter-spacing:.4px;padding:6px 11px;border-radius:20px;color:'+bc[0]+';background:'+bc[1]+';border:1px solid '+bc[2],
+      criteria: lr?lr.criteria:[], actions: lr?lr.actions:[],
+      hasCriteria: !!(lr&&lr.criteria&&lr.criteria.length), noCriteria: !(lr&&lr.criteria&&lr.criteria.length)
+    };
+
+    const mpAd=s.mpCircuit!=='enfant';
+    const mpSud=s.mpSite==='sud';
+    const segBase='flex:1;text-align:center;padding:9px 6px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;line-height:1.2';
+    const segNordStyle=segBase+';'+(!mpSud?'background:#0057a8;color:#fff;box-shadow:0 1px 3px rgba(0,87,168,.3)':'background:transparent;color:#64748b');
+    const segSudStyle=segBase+';'+(mpSud?'background:#0057a8;color:#fff;box-shadow:0 1px 3px rgba(0,87,168,.3)':'background:transparent;color:#64748b');
+    const segAdulteStyle=segBase+';'+(mpAd?'background:#7c3aed;color:#fff;box-shadow:0 1px 3px rgba(124,58,237,.3)':'background:transparent;color:#64748b');
+    const segEnfantStyle=segBase+';'+(!mpAd?'background:#ea580c;color:#fff;box-shadow:0 1px 3px rgba(234,88,12,.3)':'background:transparent;color:#64748b');
+    const mpCirc={
+      nord:{
+        adulte:[
+          {head:'Sans signe de gravité · jour ouvré',rest:'appel avis infectiologue 40464 OU CeGIDD 02 62 90 55 69 pour organiser le prélèvement.'},
+          {head:'Sans signe de gravité · hors horaires',rest:'appel astreinte infectieux 0692 26 76 51 pour organiser le prélèvement au CeGIDD le lendemain.'},
+          {head:'Signe de gravité',rest:'prise en charge aux urgences / service dédié · classement du cas avec infectiologue référent + ARS.'},
+          {head:'Précautions',rest:'patient masqué + HdM, lésions couvertes · soignant masque chirurgical (FFP2 si geste aérosolisant), surblouse, gants, protection oculaire.'}
+        ],
+        enfant:[
+          {head:'Enfant < 15 ans',rest:'alerter le sénior UHCD pédiatrique (poste 40210), puis mêmes circuits que l\u2019adulte.'},
+          {head:'Enfant < 6 ans',rest:'prise en charge conjointe infectiologue + sénior UHCD pédiatrique · prélèvements réalisés par le pédiatre.'},
+          {head:'Box / précautions',rest:'box dédié (NRBC), porte fermée · précautions contact + respiratoire (AIR + CONTACT) · enfant + accompagnant masqués.'},
+          {head:'Validation',rest:'classement du cas avec l\u2019infectiologue référent (40464 · astreinte 0692 26 76 51) + ARS.'}
+        ]
+      },
+      sud:{
+        adulte:[
+          {head:'Jours ouvrés (lun–ven 8h–16h)',rest:'orientation CeGIDD — IDE 02 62 35 96 30 (interne 54375), accueil par l\u2019extérieur, prélèvement en salle dédiée.'},
+          {head:'Nuit / WE / jour férié',rest:'urgences adultes · identification dès l\u2019IAO (retour Madagascar / Comores / Mayotte < 21 j, contact d\u2019un cas confirmé, lésions évocatrices).'},
+          {head:'Si PEC aux urgences',rest:'orientation urgences infectieuses dédiées, chambre porte fermée · UMP + EPI placés devant la chambre.'},
+          {head:'Précautions',rest:'patient masqué + HdM · soignant masque chirurgical (FFP2 si contact > 15 min/non masqué ou geste aérosolisant), surblouse UU, gants, lunettes si examen endobuccal.'}
+        ],
+        enfant:[
+          {head:'Accueil (0–18 ans)',rest:'niveau -1 du PFME par l\u2019IAO · enfant + accompagnant masqués + HdM, attente à l\u2019extérieur.'},
+          {head:'Avis pédiatre',rest:'pédiatre de garde DECT 55194 · si hospit / évaluation rapide → filière urgences pédiatriques ; sinon → CeGIDD.'},
+          {head:'Box dédié',rest:'chambre 105 de l\u2019UHCD (ou box urgences pédiatriques) · UMP + EPI dans le couloir · précautions contact + respiratoire.'},
+          {head:'Prélèvement',rest:'IDE UHCD 59538 si consultation médicale · PCR adressée au labo microbiologie Nord (astreinte 06 92 26 77 35).'}
+        ]
+      }
+    };
+    const mpCircItems=mpCirc[mpSud?'sud':'nord'][mpAd?'adulte':'enfant'];
+
+    const merZones = (s.remoteMers&&s.remoteMers.length)?s.remoteMers:this.MERZ;
+
+    const srcBadge=(c)=>'flex-shrink:0;width:46px;text-align:center;font-size:9.5px;font-weight:700;letter-spacing:.2px;color:#fff;background:'+c+';border-radius:8px;padding:5px 4px;line-height:1.15';
+    const sources=[
+      {tag:'SpF',name:'Santé publique France — définitions de cas (MDO)',note:'Référence nationale : MERS, Mpox, FHCC, FHV',url:'https://www.santepubliquefrance.fr/maladies-a-declaration-obligatoire',badge:srcBadge('#0057a8')},
+      {tag:'ECDC',name:'ECDC — Communicable Disease Threats Report',note:'Bulletin hebdomadaire des menaces (UE/monde)',url:'https://www.ecdc.europa.eu/en/publications-and-data/monitoring/weekly-threats-reports',badge:srcBadge('#0d7a8a')},
+      {tag:'OMS',name:'OMS — Disease Outbreak News',note:'Alertes épidémiques mondiales officielles',url:'https://www.who.int/emergencies/disease-outbreak-news',badge:srcBadge('#1f6f8b')},
+      {tag:'CDC',name:'US CDC — Travel Health Notices',note:'Niveaux d\u2019alerte par pays / destination',url:'https://wwwnc.cdc.gov/travel/notices',badge:srcBadge('#15803d')},
+      {tag:'COREB',name:'Mission COREB Nationale — fiches REB',note:'Fiches par agent + conduites à tenir',url:'https://www.coreb.infectiologie.com/fr/referentiel-technique-esr.html',badge:srcBadge('#9d174d')},
+      {tag:'CNR',name:'CNR Fièvres hémorragiques virales (Lyon)',note:'Expertise & classement FHV — 04 37 28 24 40',url:'https://www.cnrvfh.fr',badge:srcBadge('#b45309')}
+    ];
+
+    const refDot=(c)=>'width:9px;height:9px;border-radius:50%;flex-shrink:0;background:'+c;
+    const chip='font-size:11px;font-weight:600;color:#0057a8;background:#eaf2fb;border-radius:8px;padding:5px 9px;text-decoration:none;white-space:nowrap';
+    const chip2='font-size:11px;font-weight:600;color:#475569;background:#f1f4f8;border-radius:8px;padding:5px 9px;text-decoration:none;white-space:nowrap';
+    const COREB_FHV='https://www.coreb.infectiologie.com/fr/fievres-hemorragiques-virales-fhv.html';
+    const COREB_FHCC='https://www.coreb.infectiologie.com/fr/fievre-hemorragique-de-crimee-congo-fhcc.html';
+    const COREB_MPOX='https://www.coreb.infectiologie.com/fr/fiches-pratiques.html';
+    const COREB_MERS='https://www.coreb.infectiologie.com/fr/mers-cov.html';
+    const HCSP_FHV='https://www.hcsp.fr/Explore.cgi/avisrapportsdomaine?clefr=1228';
+    const HCSP_FHCC='https://www.hcsp.fr/explore.cgi/avisrapportsdomaine?clefr=1374';
+    const HCSP_MPOX='https://www.hcsp.fr/Explore.cgi/AvisRapportsDomaine?clefr=1216';
+    const IP_MARBURG='https://www.pasteur.fr/fr/centre-medical/fiches-maladies/maladie-virus-marburg';
+    const IP_LASSA='https://www.pasteur.fr/fr/centre-medical/fiches-maladies/fievre-lassa';
+    const IP_MERS='https://www.pasteur.fr/fr/centre-medical/fiches-maladies/mers-cov';
+    const pathoRefs=[
+      {name:'Ebola',coreb:COREB_FHV,def:HCSP_FHV,defLabel:'Déf. HCSP (FHV)',dot:refDot('#dc2626'),chip,chip2},
+      {name:'Marburg',coreb:COREB_FHV,def:IP_MARBURG,defLabel:'Inst. Pasteur',dot:refDot('#b91c1c'),chip,chip2},
+      {name:'Lassa',coreb:COREB_FHV,def:IP_LASSA,defLabel:'Inst. Pasteur',dot:refDot('#c2410c'),chip,chip2},
+      {name:'FHCC',coreb:COREB_FHCC,def:HCSP_FHCC,defLabel:'Déf. HCSP 2024',dot:refDot('#9d174d'),chip,chip2},
+      {name:'MERS-CoV',coreb:COREB_MERS,def:IP_MERS,defLabel:'Inst. Pasteur',dot:refDot('#0d9488'),chip,chip2},
+      {name:'Mpox / Variole',coreb:COREB_MPOX,def:HCSP_MPOX,defLabel:'Avis HCSP',dot:refDot('#7c3aed'),chip,chip2}
+    ];
+
+    return {
+      show, homeBar: sc==='home', canBack: sc!=='home', barTitle, barSub, etab,
+      veille: this.props.veille!==false,
+      back:this.back, goHome:this.goHome, goContacts:this.goContacts, goSettings:this.goSettings, goFiche:this.goFiche,
+      startMers:this.startMers, startMpox:this.startMpox, restart:this.restart, fhvCards, ag:{short:a.short,name:a.name,family:a.family,windowTxt:String(a.window)},
+      zoneUpdate:(s.remoteFhv?'Zones synchronisées (source distante)':'Zones intégrées — màj 27/05/2026 · Santé publique France'),
+
+      showStepper: ['eb_clin','eb_zone','eb_crit','eb_profil','eb_res'].includes(sc), ebSteps,
+      showMeProg: ['me_clin','me_immuno','me_expo','mp_clin','mp_epi'].includes(sc), meDots,
+
+      ebSymItems, ebClinNone:this.ebClinNone, ebClinNext:this.ebClinNext,
+      ebClinLabel: nSym+' critère'+(nSym!==1?'s':'')+' — Continuer', ebClinBtn: nSym>0?primaryOn:primaryOff,
+      ebZoneCards, ebZoneNo:this.ebZoneNo, ebZoneYes:this.ebZoneYes,
+      ebExpItems, toggleVB:this.toggleVB, toggleVC:this.toggleVC,
+      vbStyle:this.chkStyle(s.ebVB), vbCb:this.chkBox(s.ebVB), vbMark:s.ebVB?'✓':'',
+      vcStyle:this.chkStyle(s.ebVC), vcCb:this.chkBox(s.ebVC), vcMark:s.ebVC?'✓':'',
+      ebCritNone:this.ebCritNone, ebCritNext:this.ebCritNext,
+      ebCritLabel: anyCrit?'Classer le cas →':'Classer le cas', ebCritBtn: anyCrit?primaryOn:primaryOff,
+      setSubNe:this.setSubNe, setSubEx:this.setSubEx, ebProfilNext:this.ebProfilNext,
+      subNeStyle:subBox(s.ebSub==='ne','#d97706','#fffbeb'), subNeRad:subRad(s.ebSub==='ne','#d97706'),
+      subExStyle:subBox(s.ebSub==='ex','#dc2626','#fef2f2'), subExRad:subRad(s.ebSub==='ex','#dc2626'),
+      ebProfilBtn: (s.ebSub?primaryOn:primaryOff).replace('flex:1.4','width:100%')+';margin-top:16px',
+      ebHeroStyle, ebHeroBadge, ebHeroTitle: ex?'Excréteur · Avéré':'Non excréteur',
+      ebHeroSub: ex?'Risque de transmission maximal — protocole renforcé':'Patient stable — protocole standard groupe 4',
+      ebEpiLabel: ex?'Excréteur / Avéré (ESR)':'Non excréteur (hors ESR)', ebEpiItems: ex?this.EPI_EX:this.EPI_NE,
+      contactRows,
+
+      merZones, merEpi:this.MER_EPI,
+      meStart:this.meStart, meClinSevere:this.meClinSevere, meClinIra:this.meClinIra, meClinImmuno:this.meClinImmuno, meClinNone:this.meClinNone,
+      meImmunoYes:this.meImmunoYes, meImmunoNo:this.meImmunoNo, meSevere: s.meClin==='severe',
+      meExpoLead: s.meClin==='severe'?'Tableau sévère : une seule exposition suffit (séjour/voyage compris).':'IRA : il faut au moins une exposition à risque parmi les suivantes.',
+      meExpoVoyage:this.meExpoVoyage, meExpoContact:this.meExpoContact, meExpoSoins:this.meExpoSoins, meExpoDromadaire:this.meExpoDromadaire, meExpoNone:this.meExpoNone,
+
+      mpZones:(s.remoteMpox&&s.remoteMpox.length)?s.remoteMpox:this.MPZ, mpEpiList:this.MP_EPI, mpEpi:this.MP_EPI,
+      mpStart:this.mpStart, mpClinErup:this.mpClinErup, mpClinFebr:this.mpClinFebr, mpClinNone:this.mpClinNone,
+      mpEpiContact:this.mpEpiContact, mpEpiVoyage:this.mpEpiVoyage, mpEpiMada:this.mpEpiMada, mpEpiReseau:this.mpEpiReseau, mpEpiAnimal:this.mpEpiAnimal, mpEpiNone:this.mpEpiNone,
+      mpIsAdulte:mpAd, mpIsEnfant:!mpAd, setMpAdulte:this.setMpAdulte, setMpEnfant:this.setMpEnfant, setMpNord:this.setMpNord, setMpSud:this.setMpSud, segAdulteStyle, segEnfantStyle, segNordStyle, segSudStyle, mpCircItems,
+
+      fiche, doPrint:this.doPrint, doShare:this.doShare, shareLabel: s.shared?'✓ Copié':'⤴ Partager',
+
+      zoneUrl:s.zoneUrl, onZoneUrl:this.onZoneUrl, loadZones:this.loadZones, resetZones:this.resetZones,
+      zoneStatus:s.zoneStatus, zoneStatusStyle, allFhvZones, sources, pathoRefs,
+
+      contactsList:this.CONTACTS.map(c=>({name:c.name,sub:c.sub,disp:c.disp,href:'tel:'+c.tel}))
+    };
+  }
+}
+</script>
+</body>
+</html>
