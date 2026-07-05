@@ -1,11 +1,13 @@
 {
-  "updated": "2026-06-25",
+  "updated": "2026-07-05",
   "source": "Santé publique France",
-  "source_url": "https://www.santepubliquefrance.fr/sites/default/files/2026-06/Ebola_Liste_des_zones_a_risque.pdf",
+  "source_url": "https://www.santepubliquefrance.fr/sites/default/files/2026-07/Liste_des_zones_a_risque_20260701_1.pdf",
+  "source_version": "1er juillet 2026",
   "zones": [
     {"country":"RDC","type":"province","name":"Ituri","capital":"Bunia","risk":"high"},
     {"country":"RDC","type":"province","name":"Nord Kivu","capital":"Goma","risk":"high"},
     {"country":"RDC","type":"province","name":"Sud Kivu","capital":"Bukavu","risk":"high"},
+    {"country":"RDC","type":"province","name":"Haut-Uélé","capital":"Isiro","risk":"high"},
     {"country":"Ouganda","type":"country","name":"Ouganda","capital":"Kampala","risk":"medium"}
   ],
 
