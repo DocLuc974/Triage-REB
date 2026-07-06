@@ -23,5 +23,10 @@
     "signature": "\"1783010154\"",
     "checkedAt": "2026-07-02T19:03:48.546Z",
     "lastChangedAt": "2026-07-02T19:03:18.933Z"
+  },
+  "ebola_fiche": {
+    "hash": "75c1ae3312af94a1dccf7fdce7f7f31fb5438d2621e8fa652c573d424e845966",
+    "checkedAt": "2026-07-06T16:44:27.008Z",
+    "lastChangedAt": "2026-07-06T16:44:27.008Z"
   }
 }
