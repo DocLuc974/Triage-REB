@@ -1,18 +1,53 @@
 {
-  "updated": "2026-07-05",
-  "source": "Santé publique France",
-  "source_url": "https://www.santepubliquefrance.fr/sites/default/files/2026-07/Liste_des_zones_a_risque_20260701_1.pdf",
+  "updated": "2026-07-21",
+  "source": "Fiche COREB - Ebola",
+  "source_url": "https://www.coreb.infectiologie.com/UserFiles/File/procedures/2025118-fiche-coreb-fhv-ebola.pdf",
   "source_version": "1er juillet 2026",
   "zones": [
-    {"country":"RDC","type":"province","name":"Ituri","capital":"Bunia","risk":"high"},
-    {"country":"RDC","type":"province","name":"Nord Kivu","capital":"Goma","risk":"high"},
-    {"country":"RDC","type":"province","name":"Sud Kivu","capital":"Bukavu","risk":"high"},
-    {"country":"RDC","type":"province","name":"Haut-Uélé","capital":"Isiro","risk":"high"},
-    {"country":"Ouganda","type":"country","name":"Ouganda","capital":"Kampala","risk":"medium"}
+    {
+      "country": "RDC",
+      "type": "province",
+      "name": "Ituri",
+      "capital": "Bunia",
+      "risk": "high"
+    },
+    {
+      "country": "RDC",
+      "type": "province",
+      "name": "Nord-Kivu",
+      "capital": "Goma",
+      "risk": "high"
+    },
+    {
+      "country": "RDC",
+      "type": "province",
+      "name": "Sud-Kivu",
+      "capital": "Bukavu",
+      "risk": "high"
+    },
+    {
+      "country": "RDC",
+      "type": "province",
+      "name": "Haut-Uélé",
+      "capital": "Isiro",
+      "risk": "high"
+    },
+    {
+      "country": "RDC",
+      "type": "province",
+      "name": "Province De Tshopo",
+      "capital": "",
+      "risk": "high"
+    },
+    {
+      "country": "Ouganda",
+      "type": "country",
+      "name": "Ouganda",
+      "capital": "Kampala",
+      "risk": "medium"
+    }
   ],
-
   "autres_pathogenes_reb": {
-
     "lassa": {
       "label": "Fièvre de Lassa",
       "source": "Zones d'endémie OMS / INRS",
@@ -20,16 +55,50 @@
       "updated": "2026-06-25",
       "note": "⚠ Zones d'endémie stable — pas de liste d'alerte dynamique maintenue par SPF comme pour Ebola. À utiliser comme repère géographique, pas comme zone d'alerte active.",
       "zones": [
-        {"country":"Nigeria","type":"country","name":"Nigeria","risk":"high"},
-        {"country":"Guinée","type":"country","name":"Guinée","risk":"high"},
-        {"country":"Libéria","type":"country","name":"Libéria","risk":"high"},
-        {"country":"Sierra Leone","type":"country","name":"Sierra Leone","risk":"high"},
-        {"country":"Ghana","type":"country","name":"Ghana","risk":"medium"},
-        {"country":"Bénin","type":"country","name":"Bénin","risk":"medium"},
-        {"country":"Togo","type":"country","name":"Togo","risk":"medium"}
+        {
+          "country": "Nigeria",
+          "type": "country",
+          "name": "Nigeria",
+          "risk": "high"
+        },
+        {
+          "country": "Guinée",
+          "type": "country",
+          "name": "Guinée",
+          "risk": "high"
+        },
+        {
+          "country": "Libéria",
+          "type": "country",
+          "name": "Libéria",
+          "risk": "high"
+        },
+        {
+          "country": "Sierra Leone",
+          "type": "country",
+          "name": "Sierra Leone",
+          "risk": "high"
+        },
+        {
+          "country": "Ghana",
+          "type": "country",
+          "name": "Ghana",
+          "risk": "medium"
+        },
+        {
+          "country": "Bénin",
+          "type": "country",
+          "name": "Bénin",
+          "risk": "medium"
+        },
+        {
+          "country": "Togo",
+          "type": "country",
+          "name": "Togo",
+          "risk": "medium"
+        }
       ]
     },
-
     "marburg": {
       "label": "Maladie à virus Marburg",
       "source": "OMS — historique des foyers (pas de zone à risque dynamique SPF)",
@@ -37,14 +106,38 @@
       "updated": "2026-06-25",
       "note": "⚠ Pas de foyer actif confirmé connu à la date de mise à jour — à vérifier sur OMS/ECDC avant tout usage clinique. Liste basée sur les pays ayant eu des foyers historiques (les plus récents : Rwanda 2024, Tanzanie/Guinée équatoriale 2023, Ghana 2022).",
       "zones": [
-        {"country":"Ouganda","type":"country","name":"Ouganda","risk":"medium"},
-        {"country":"Guinée équatoriale","type":"country","name":"Guinée équatoriale","risk":"medium"},
-        {"country":"Tanzanie","type":"country","name":"Tanzanie","risk":"medium"},
-        {"country":"Rwanda","type":"country","name":"Rwanda","risk":"medium"},
-        {"country":"Ghana","type":"country","name":"Ghana","risk":"medium"}
+        {
+          "country": "Ouganda",
+          "type": "country",
+          "name": "Ouganda",
+          "risk": "medium"
+        },
+        {
+          "country": "Guinée équatoriale",
+          "type": "country",
+          "name": "Guinée équatoriale",
+          "risk": "medium"
+        },
+        {
+          "country": "Tanzanie",
+          "type": "country",
+          "name": "Tanzanie",
+          "risk": "medium"
+        },
+        {
+          "country": "Rwanda",
+          "type": "country",
+          "name": "Rwanda",
+          "risk": "medium"
+        },
+        {
+          "country": "Ghana",
+          "type": "country",
+          "name": "Ghana",
+          "risk": "medium"
+        }
       ]
     },
-
     "fhcc": {
       "label": "FHCC (fièvre hémorragique de Crimée-Congo)",
       "source": "Santé publique France",
@@ -52,13 +145,32 @@
       "updated": "2026-06-25",
       "note": "En France métropolitaine, le risque est désormais local : présence du vecteur (tique Hyalomma marginatum), pas une notion de zone d'importation par voyage.",
       "zones": [
-        {"country":"France","type":"region","name":"Pyrénées-Orientales","risk":"medium"},
-        {"country":"France","type":"region","name":"Corse","risk":"medium"},
-        {"country":"France","type":"region","name":"Drôme-Ardèche (Auvergne-Rhône-Alpes)","risk":"medium"},
-        {"country":"International","type":"region","name":"Afrique, Balkans, Moyen-Orient, Asie centrale (zones d'endémie)","risk":"high"}
+        {
+          "country": "France",
+          "type": "region",
+          "name": "Pyrénées-Orientales",
+          "risk": "medium"
+        },
+        {
+          "country": "France",
+          "type": "region",
+          "name": "Corse",
+          "risk": "medium"
+        },
+        {
+          "country": "France",
+          "type": "region",
+          "name": "Drôme-Ardèche (Auvergne-Rhône-Alpes)",
+          "risk": "medium"
+        },
+        {
+          "country": "International",
+          "type": "region",
+          "name": "Afrique, Balkans, Moyen-Orient, Asie centrale (zones d'endémie)",
+          "risk": "high"
+        }
       ]
     },
-
     "mers_cov": {
       "label": "MERS-CoV",
       "source": "Santé publique France",
@@ -66,16 +178,50 @@
       "updated": "2024-06-10",
       "note": "Liste officielle datée du 10/06/2024 — à reconfirmer via la surveillance GitHub Action, susceptible d'évoluer si un nouveau pays rapporte des cas autochtones.",
       "zones": [
-        {"country":"Arabie Saoudite","type":"country","name":"Arabie Saoudite","risk":"high"},
-        {"country":"Bahreïn","type":"country","name":"Bahreïn","risk":"high"},
-        {"country":"Émirats Arabes Unis","type":"country","name":"Émirats Arabes Unis","risk":"high"},
-        {"country":"Koweït","type":"country","name":"Koweït","risk":"high"},
-        {"country":"Oman","type":"country","name":"Oman","risk":"high"},
-        {"country":"Qatar","type":"country","name":"Qatar","risk":"high"},
-        {"country":"Yémen","type":"country","name":"Yémen","risk":"high"}
+        {
+          "country": "Arabie Saoudite",
+          "type": "country",
+          "name": "Arabie Saoudite",
+          "risk": "high"
+        },
+        {
+          "country": "Bahreïn",
+          "type": "country",
+          "name": "Bahreïn",
+          "risk": "high"
+        },
+        {
+          "country": "Émirats Arabes Unis",
+          "type": "country",
+          "name": "Émirats Arabes Unis",
+          "risk": "high"
+        },
+        {
+          "country": "Koweït",
+          "type": "country",
+          "name": "Koweït",
+          "risk": "high"
+        },
+        {
+          "country": "Oman",
+          "type": "country",
+          "name": "Oman",
+          "risk": "high"
+        },
+        {
+          "country": "Qatar",
+          "type": "country",
+          "name": "Qatar",
+          "risk": "high"
+        },
+        {
+          "country": "Yémen",
+          "type": "country",
+          "name": "Yémen",
+          "risk": "high"
+        }
       ]
     },
-
     "mpox": {
       "label": "Mpox (variole B)",
       "source": "Santé publique France / OMS",
@@ -83,14 +229,43 @@
       "updated": "2026-06-25",
       "note": "⚠ Situation très évolutive (clade Ib). Le risque dépend autant du type de contact (rapproché, sexuel) que d'un critère géographique seul. Madagascar en alerte depuis déc. 2025 (proximité directe Réunion/Mayotte). Transmission autochtone de clade Ib également rapportée en métropole (Île-de-France) et dans plusieurs pays européens — un séjour en zone non listée n'exclut donc pas le risque en cas de contact à risque avéré.",
       "zones": [
-        {"country":"RDC","type":"country","name":"RDC","risk":"high"},
-        {"country":"Madagascar","type":"country","name":"Madagascar","risk":"high"},
-        {"country":"Rwanda","type":"country","name":"Rwanda","risk":"medium"},
-        {"country":"Burundi","type":"country","name":"Burundi","risk":"medium"},
-        {"country":"Ouganda","type":"country","name":"Ouganda","risk":"medium"},
-        {"country":"Kenya","type":"country","name":"Kenya","risk":"medium"}
+        {
+          "country": "RDC",
+          "type": "country",
+          "name": "RDC",
+          "risk": "high"
+        },
+        {
+          "country": "Madagascar",
+          "type": "country",
+          "name": "Madagascar",
+          "risk": "high"
+        },
+        {
+          "country": "Rwanda",
+          "type": "country",
+          "name": "Rwanda",
+          "risk": "medium"
+        },
+        {
+          "country": "Burundi",
+          "type": "country",
+          "name": "Burundi",
+          "risk": "medium"
+        },
+        {
+          "country": "Ouganda",
+          "type": "country",
+          "name": "Ouganda",
+          "risk": "medium"
+        },
+        {
+          "country": "Kenya",
+          "type": "country",
+          "name": "Kenya",
+          "risk": "medium"
+        }
       ]
     }
-
   }
 }
