@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-10",
+  "updated": "2026-08-17",
   "source": "Fiche COREB - Ebola",
   "source_url": "https://www.coreb.infectiologie.com/UserFiles/File/procedures/2025118-fiche-coreb-fhv-ebola.pdf",
   "source_version": "1er juillet 2026",
@@ -35,8 +35,15 @@
     {
       "country": "RDC",
       "type": "province",
-      "name": "Province De Tshopo",
-      "capital": "",
+      "name": "Bas-Uélé",
+      "capital": "Buta",
+      "risk": "high"
+    },
+    {
+      "country": "RDC",
+      "type": "province",
+      "name": "Tshopo",
+      "capital": "Kisangani",
       "risk": "high"
     },
     {
