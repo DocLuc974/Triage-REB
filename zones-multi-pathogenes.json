@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-14",
+  "updated": "2026-09-17",
   "source": "Fiche COREB - Ebola",
   "source_url": "https://www.coreb.infectiologie.com/UserFiles/File/procedures/2025118-fiche-coreb-fhv-ebola.pdf",
   "source_version": "1er juillet 2026",
@@ -47,11 +47,11 @@
       "risk": "high"
     },
     {
-      "country": "Ouganda",
-      "type": "country",
-      "name": "Ouganda",
-      "capital": "Kampala",
-      "risk": "medium"
+      "country": "RDC",
+      "type": "province",
+      "name": "Sud-Ubangi",
+      "capital": "",
+      "risk": "high"
     }
   ],
   "autres_pathogenes_reb": {
