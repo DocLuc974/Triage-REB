@@ -33,6 +33,16 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans
   #reb-appbar{padding-top:max(8px,env(safe-area-inset-top)) !important}
   #reb-scroll{padding-bottom:env(safe-area-inset-bottom) !important}
 }
+/* Mode poste de travail (PC, navigateur) — le mobile reste inchangé */
+@media (min-width:1100px) and (display-mode:browser){
+  #reb-app-bg{padding:0 !important;align-items:stretch !important;height:100vh;min-height:0 !important;background:#e9edf2 !important}
+  #reb-left,#reb-right{display:flex !important}
+  #reb-phone{flex:1 1 auto !important;width:auto !important;max-width:720px;background:#fff !important;border-radius:0 !important;padding:0 !important;box-shadow:0 0 0 1px #dfe5ec !important}
+  #reb-screen{height:100vh !important;border-radius:0 !important}
+  #reb-statusbar{display:none !important}
+  [data-theme="dark"]{filter:invert(1) hue-rotate(180deg)}
+  [data-theme="dark"] img{filter:none}
+}
 @media print{
   body *{visibility:hidden !important}
   #fiche-print, #fiche-print *{visibility:visible !important}
@@ -56,7 +66,43 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
 </script>
 </helmet>
 
-<div id="reb-app-bg" style="min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:36px 18px 48px;background:#d6dbe4">
+<div id="reb-app-bg" data-theme="{{ theme }}" style="min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:36px 18px 48px;background:#d6dbe4">
+  <!-- ===== Poste de travail : colonne gauche ===== -->
+  <div id="reb-left" style="display:none;flex-direction:column;width:250px;flex:none;background:#fff;border-right:1px solid #dfe5ec;height:100vh;overflow-y:auto;padding:20px 14px 16px">
+    <img src="assets/logo_horizontal.png" alt="REB RUN — CHU La Réunion" style="display:block;width:100%;max-width:200px;height:auto;margin:0 auto 20px" />
+    <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#94a3b5;margin:0 8px 6px">Nouvelle évaluation</div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <sc-for list="{{ fhvCards }}" as="a" hint-placeholder-count="4">
+        <div onClick="{{ a.onClick }}" style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;cursor:pointer" style-hover="background:#f1f4f8">
+          <span style="{{ a.dot }}"></span>
+          <div style="min-width:0"><div style="font-size:13.5px;font-weight:700;color:#0f2d52">{{ a.short }}</div><div style="font-size:11px;color:#64748b;line-height:1.3">{{ a.full }}</div></div>
+        </div>
+      </sc-for>
+      <div onClick="{{ startMers }}" style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;cursor:pointer" style-hover="background:#f1f4f8">
+        <span style="display:block;width:16px;height:16px;border-radius:50%;background:#0d9488;box-shadow:0 0 0 4px #ccfbf1;flex-shrink:0"></span>
+        <div><div style="font-size:13.5px;font-weight:700;color:#0f2d52">MERS-CoV</div><div style="font-size:11px;color:#64748b">Respiratoire émergent</div></div>
+      </div>
+      <div onClick="{{ startMpox }}" style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;cursor:pointer" style-hover="background:#f1f4f8">
+        <span style="display:block;width:16px;height:16px;border-radius:50%;background:#7c3aed;box-shadow:0 0 0 4px #ede9fe;flex-shrink:0"></span>
+        <div><div style="font-size:13.5px;font-weight:700;color:#0f2d52">Mpox / Variole</div><div style="font-size:11px;color:#64748b">Orthopoxvirose éruptive</div></div>
+      </div>
+    </div>
+    <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#94a3b5;margin:18px 8px 6px">Aide au recueil · Ebola</div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <div onClick="{{ openInterp }}" style="padding:9px 10px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;color:#0057a8" style-hover="background:#f1f4f8">Questions traduites EN · Lingala</div>
+      <div onClick="{{ openSpf }}" style="padding:9px 10px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;color:#0057a8" style-hover="background:#f1f4f8">Questionnaire de classement SPF</div>
+      <div onClick="{{ goSettings }}" style="padding:9px 10px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;color:#0057a8" style-hover="background:#f1f4f8">Zones à risque &amp; paramètres</div>
+    </div>
+    <div style="flex:1"></div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:18px">
+      <div onClick="{{ restart }}" style="text-align:center;padding:11px;border:1.5px solid #dfe5ec;border-radius:12px;font-size:13px;font-weight:600;color:#475569;cursor:pointer">↺ Nouveau patient</div>
+      <div onClick="{{ toggleTheme }}" style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:12px;background:#f1f4f8;cursor:pointer">
+        <div style="{{ themeTrack }}"><div style="{{ themeKnob }}"></div></div>
+        <span style="font-size:12.5px;font-weight:600;color:#0f2d52">Mode sombre</span>
+      </div>
+    </div>
+  </div>
+
   <div id="reb-phone" style="width:392px;flex:none;background:#0b0d10;border-radius:54px;padding:11px;box-shadow:0 30px 70px rgba(15,42,77,.30),0 4px 14px rgba(0,0,0,.18)">
     <div id="reb-screen" style="position:relative;height:838px;border-radius:44px;overflow:hidden;background:#f3f5f8;display:flex;flex-direction:column">
 
@@ -245,7 +291,7 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
           <div style="padding:16px 14px 24px">
             <div style="display:flex;gap:10px;background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #d97706;border-radius:13px;padding:13px;margin-bottom:13px">
               <span style="color:#d97706;font-size:16px">▲</span>
-              <div style="font-size:12.5px;color:#92702a;line-height:1.5"><b style="color:#7a5a12">Cas suspect</b> — Isolement immédiat · Masque chirurgical · Infectiologue REB&nbsp;: <b>02 62 26 76 51</b></div>
+              <div style="font-size:12.5px;color:#92702a;line-height:1.5"><b style="color:#7a5a12">Cas suspect</b> — Isolement immédiat · Masque chirurgical · Infectiologue REB&nbsp;: <b>06 92 26 75 51</b></div>
             </div>
             <div style="background:#fff;border:1px solid #eceff3;border-radius:18px;padding:18px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
               <div style="font-size:16px;font-weight:700;color:#0f2d52;line-height:1.35;margin-bottom:13px">Au moins un critère de cas <span style="color:#dc2626">possible</span>&nbsp;?</div>
@@ -309,7 +355,7 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
             <div style="display:flex;flex-direction:column;gap:7px">
               <div style="background:#fffbeb;border-left:3px solid #d97706;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#92702a;line-height:1.5">⊟ Isolement — chambre seule, porte fermée, matériel dédié</div>
               <div style="background:#fef2f2;border-left:3px solid #dc2626;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#b3322a;line-height:1.5">⚑ Signalement ARS Océan Indien immédiat</div>
-              <div style="background:#eff6ff;border-left:3px solid #2563eb;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#1d4ed8;line-height:1.5">☎ Infectiologue REB SMIT Nord&nbsp;: <b>02 62 26 76 51</b></div>
+              <div style="background:#eff6ff;border-left:3px solid #2563eb;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#1d4ed8;line-height:1.5">☎ Infectiologue REB SMIT Nord&nbsp;: <b>06 92 26 75 51</b></div>
               <div style="background:#fef2f2;border-left:3px solid #dc2626;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#b3322a;line-height:1.5">⚗ Prélèvement CNR FHV — RT-PCR, après validation infectiologue</div>
             </div>
 
@@ -664,7 +710,7 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
                 </sc-for>
               </div>
 
-              <div style="border-top:1px solid #eceff3;margin-top:16px;padding-top:11px;font-size:10.5px;color:#9aa7b6;line-height:1.55">Infectiologue REB SMIT Nord&nbsp;: 02 62 26 76 51 · ARS OI&nbsp;: 02 62 93 94 13 · SAMU&nbsp;: 15<br>Aide à la décision — ne se substitue pas à l'avis de l'infectiologue référent.</div>
+              <div style="border-top:1px solid #eceff3;margin-top:16px;padding-top:11px;font-size:10.5px;color:#9aa7b6;line-height:1.55">Infectiologue REB SMIT Nord&nbsp;: 06 92 26 75 51 · ARS OI&nbsp;: 02 62 93 94 13 · SAMU&nbsp;: 15<br>Aide à la décision — ne se substitue pas à l'avis de l'infectiologue référent.</div>
             </div>
 
             <div class="noprint" style="display:flex;gap:9px;margin-top:14px">
@@ -912,6 +958,29 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
       </div>
     </div>
   </div>
+  <!-- ===== Poste de travail : colonne droite ===== -->
+  <div id="reb-right" style="display:none;flex-direction:column;width:340px;flex:none;background:#f3f5f8;border-left:1px solid #dfe5ec;height:100vh;overflow-y:auto;padding:20px 16px">
+    <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#94a3b5;margin:0 2px 8px">Astreintes · CHU Nord</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <sc-for list="{{ deskContacts }}" as="c" hint-placeholder-count="6">
+        <a href="{{ c.href }}" style="text-decoration:none;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #e3e8ee;border-radius:12px;padding:10px 12px">
+          <div style="flex:1;min-width:0"><div style="font-size:12.5px;font-weight:700;color:#0f2d52;line-height:1.25">{{ c.name }}</div><div style="font-size:11px;color:#64748b;line-height:1.3">{{ c.sub }}</div></div>
+          <div style="font-size:15px;font-weight:700;color:#0057a8;white-space:nowrap;font-variant-numeric:tabular-nums">{{ c.disp }}</div>
+        </a>
+      </sc-for>
+    </div>
+    <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#94a3b5;margin:20px 2px 8px">Résumé pour le dossier de régulation</div>
+    <div style="background:#fff;border:1px solid #e3e8ee;border-radius:14px;padding:14px">
+      <sc-if value="{{ deskHasText }}">
+        <pre style="white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:12px;color:#1a2230;line-height:1.55;margin:0;max-height:46vh;overflow-y:auto">{{ deskText }}</pre>
+        <div onClick="{{ deskCopy }}" style="margin-top:12px;background:#0057a8;border-radius:11px;padding:12px;text-align:center;font-size:13.5px;font-weight:600;color:#fff;cursor:pointer">{{ deskCopyLabel }}</div>
+      </sc-if>
+      <sc-if value="{{ deskNoText }}">
+        <div style="font-size:12.5px;color:#64748b;line-height:1.55">Le résumé (classement, critères, conduite à tenir) apparaît ici dès la fin du triage, prêt à coller dans le logiciel de régulation.</div>
+      </sc-if>
+    </div>
+    <div style="font-size:10.5px;color:#9aa7b6;line-height:1.55;margin-top:14px;text-align:center">Aide à la décision — ne se substitue pas à l'avis de l'infectiologue référent</div>
+  </div>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:392,&quot;height&quot;:838},&quot;etablissement&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;CHU de La Réunion&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;veille&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
@@ -947,21 +1016,22 @@ class Component extends DCLogic {
   MER_EPI = ['Masque FFP2 (FFP3 si aérosols)','Protection oculaire','Surblouse imp. UU','Gants UU','Charlotte / coiffe'];
   MP_EPI = ['Masque FFP2','Protection oculaire','Surblouse imp. UU','Double gants UU','Charlotte / coiffe'];
   CONTACTS = [
-    {name:'Infectiologue REB — SMIT Nord',sub:'Astreinte REB · 7j/7',tel:'0262267651',disp:'02 62 26 76 51'},
+    {name:'Infectiologue REB — SMIT Nord',sub:'Astreinte REB · 7j/7',tel:'0692267551',disp:'06 92 26 75 51'},
     {name:'CNR FHV — Institut Pasteur',sub:'24h/24 · nuit 07 87 94 76 47',tel:'0437282440',disp:'04 37 28 24 40'},
     {name:'ARS Océan Indien',sub:'Astreinte régionale',tel:'0262939413',disp:'02 62 93 94 13'},
     {name:'SAMU — Centre 15',sub:'Urgence vitale',tel:'15',disp:'15'}
   ];
-  FHV_ACTIONS = ['Isolement chambre seule, porte fermée, matériel dédié','Signalement ARS Océan Indien immédiat','Appel infectiologue REB SMIT Nord (02 62 26 76 51)','EPI groupe 4 — habillage encadré, ne jamais intervenir seul','Prélèvement CNR FHV (RT-PCR) après validation infectiologue','Surveillance des sujets-contacts selon niveau de risque'];
+  FHV_ACTIONS = ['Isolement chambre seule, porte fermée, matériel dédié','Signalement ARS Océan Indien immédiat','Appel infectiologue REB SMIT Nord (06 92 26 75 51)','EPI groupe 4 — habillage encadré, ne jamais intervenir seul','Prélèvement CNR FHV (RT-PCR) après validation infectiologue','Surveillance des sujets-contacts selon niveau de risque'];
   MERS_ACTIONS = ['Isolement « air + contact » sans délai (chambre seule)','Masque chirurgical porté par le patient','Signalement infectiologue référent + ARS','Prélèvements respiratoires voies basses après validation','RT-PCR MERS-CoV réalisée sur place (labo CHU) — DO si confirmé'];
-  MPOX_ACTIONS = ['Isolement « contact + gouttelettes » (air si forme grave / clade I)','Couvrir les lésions, masque chirurgical patient','Signalement ARS + infectiologue référent','Prélèvement de lésion + écouvillon oropharyngé — PCR orthopoxvirus (triple emballage, pas de pneumatique)','Adulte NORD : jour ouvré → avis 40464 ou CeGIDD 02 62 90 55 69 ; hors horaires → astreinte 0692 26 76 51 (prélèvement CeGIDD le lendemain) ; signe de gravité → urgences','Adulte SUD : jours ouvrés → CeGIDD 02 62 35 96 30 ; nuit/WE/férié ou hospit → urgences infectieuses dédiées (cf. protocole CHU Sud)','Enfant : NORD sénior UHCD péd 40210 (< 6 ans PEC conjointe infectiologue) ; SUD pédiatre de garde DECT 55194, box chambre 105 UHCD ; précautions contact + respiratoire'];
+  MPOX_ACTIONS = ['Isolement « contact + gouttelettes » (air si forme grave / clade I)','Couvrir les lésions, masque chirurgical patient','Signalement ARS + infectiologue référent','Prélèvement de lésion + écouvillon oropharyngé — PCR orthopoxvirus (triple emballage, pas de pneumatique)','Adulte NORD : jour ouvré → avis 40464 ou CeGIDD 02 62 90 55 69 ; hors horaires → astreinte 06 92 26 75 51 (prélèvement CeGIDD le lendemain) ; signe de gravité → urgences','Adulte SUD : jours ouvrés → CeGIDD 02 62 35 96 30 ; nuit/WE/férié ou hospit → urgences infectieuses dédiées (cf. protocole CHU Sud)','Enfant : NORD sénior UHCD péd 40210 (< 6 ans PEC conjointe infectiologue) ; SUD pédiatre de garde DECT 55194, box chambre 105 UHCD ; précautions contact + respiratoire'];
 
   DEFAULT_ZONE_URL = 'https://docluc974.github.io/Triage-REB/zones-multi-pathogenes.json';
 
   componentDidMount(){
     let u=this.DEFAULT_ZONE_URL;
     try{ const saved=localStorage.getItem('reb_zone_url'); if(saved) u=saved; }catch(e){}
-    this.setState({zoneUrl:u});
+    let th='light'; try{ if(localStorage.getItem('reb_theme')==='dark') th='dark'; }catch(e){}
+    this.setState({zoneUrl:u, theme:th});
     // Synchro automatique au lancement (silencieuse, repli hors-ligne)
     this.autoSyncZones(u);
   }
@@ -1017,6 +1087,22 @@ class Component extends DCLogic {
     const fb=()=>{ const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} ta.remove(); done(); };
     if(navigator.clipboard&&window.isSecureContext) navigator.clipboard.writeText(txt).then(done,fb); else fb(); }
   ipCopy = ()=>this.copyText(this.ipText(),'ip');
+  deskCopy = ()=>this.copyText(this.deskText(),'desk');
+  toggleTheme = ()=>{ const t=this.state.theme==='dark'?'light':'dark'; try{ localStorage.setItem('reb_theme',t); }catch(e){} this.setState({theme:t}); };
+  DESK_CONTACTS = [
+    {name:'Infectiologue REB — SMIT Nord',sub:'Astreinte infectiologie · portable 7j/7',tel:'0692267551',disp:'06 92 26 75 51'},
+    {name:'Avis infectiologie',sub:'Poste interne · jours ouvrés',tel:'40464',disp:'40464'},
+    {name:'CeGIDD Nord',sub:'Mpox adulte · jours ouvrés',tel:'0262905569',disp:'02 62 90 55 69'},
+    {name:'ARS Océan Indien',sub:'Signalement · astreinte',tel:'0262939413',disp:'02 62 93 94 13'},
+    {name:'CNR FHV — Institut Pasteur',sub:'24h/24 · nuit 07 87 94 76 47',tel:'0437282440',disp:'04 37 28 24 40'}
+  ];
+  deskText(){ const s=this.state, r=s.lastResult, L=[];
+    if(r){ L.push('TRIAGE REB — '+r.agentName+' — '+r.date); L.push('Classement : '+r.badge);
+      if(r.criteria&&r.criteria.length){ L.push('Critères :'); r.criteria.forEach(c=>L.push('- '+c)); }
+      if(r.actions&&r.actions.length){ L.push('Conduite à tenir :'); r.actions.forEach(c=>L.push('- '+c)); } }
+    const ip=s.ip||{}; if(Object.keys(ip).length){ if(L.length) L.push(''); L.push(this.ipText()); }
+    const v=s.spf||{}; const n=Object.keys(v).filter(k=>this.filled(v[k])).length; if(n){ if(L.length) L.push(''); L.push('Questionnaire SPF de classement : '+n+' champ(s) renseigné(s) — résumé détaillé dans l’onglet Questionnaire SPF.'); }
+    return L.join('\n'); }
   spfCopy = ()=>this.copyText(this.spfText(),'spf');
 
   IP = [
@@ -1256,7 +1342,7 @@ class Component extends DCLogic {
   doPrint = ()=>{ try{ window.print(); }catch(e){} };
   doShare = ()=>{
     const lr=this.state.lastResult; if(!lr) return;
-    const txt='TRIAGE REB — '+lr.agentName+'\n'+lr.badge+' · '+lr.date+'\n\nCritères :\n- '+lr.criteria.join('\n- ')+'\n\nConduite à tenir :\n- '+lr.actions.join('\n- ')+'\n\nInfectiologue REB : 02 62 26 76 51';
+    const txt='TRIAGE REB — '+lr.agentName+'\n'+lr.badge+' · '+lr.date+'\n\nCritères :\n- '+lr.criteria.join('\n- ')+'\n\nConduite à tenir :\n- '+lr.actions.join('\n- ')+'\n\nInfectiologue REB : 06 92 26 75 51';
     if(navigator.share){ navigator.share({title:'Triage REB — '+lr.agentName,text:txt}).catch(()=>{}); }
     else if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>this.setState({shared:true})).catch(()=>{}); }
     else { this.setState({shared:true}); }
@@ -1399,7 +1485,7 @@ class Component extends DCLogic {
       nord:{
         adulte:[
           {head:'Sans signe de gravité · jour ouvré',rest:'appel avis infectiologue 40464 OU CeGIDD 02 62 90 55 69 pour organiser le prélèvement.'},
-          {head:'Sans signe de gravité · hors horaires',rest:'appel astreinte infectieux 0692 26 76 51 pour organiser le prélèvement au CeGIDD le lendemain.'},
+          {head:'Sans signe de gravité · hors horaires',rest:'appel astreinte infectieux 06 92 26 75 51 pour organiser le prélèvement au CeGIDD le lendemain.'},
           {head:'Signe de gravité',rest:'prise en charge aux urgences / service dédié · classement du cas avec infectiologue référent + ARS.'},
           {head:'Précautions',rest:'patient masqué + HdM, lésions couvertes · soignant masque chirurgical (FFP2 si geste aérosolisant), surblouse, gants, protection oculaire.'}
         ],
@@ -1407,7 +1493,7 @@ class Component extends DCLogic {
           {head:'Enfant < 15 ans',rest:'alerter le sénior UHCD pédiatrique (poste 40210), puis mêmes circuits que l\u2019adulte.'},
           {head:'Enfant < 6 ans',rest:'prise en charge conjointe infectiologue + sénior UHCD pédiatrique · prélèvements réalisés par le pédiatre.'},
           {head:'Box / précautions',rest:'box dédié (NRBC), porte fermée · précautions contact + respiratoire (AIR + CONTACT) · enfant + accompagnant masqués.'},
-          {head:'Validation',rest:'classement du cas avec l\u2019infectiologue référent (40464 · astreinte 0692 26 76 51) + ARS.'}
+          {head:'Validation',rest:'classement du cas avec l\u2019infectiologue référent (40464 · astreinte 06 92 26 75 51) + ARS.'}
         ]
       },
       sud:{
@@ -1462,7 +1548,10 @@ class Component extends DCLogic {
     ];
 
     return {
-      ...this.toolVals(), show, homeBar: sc==='home', canBack: sc!=='home', barTitle, barSub, etab,
+      ...this.toolVals(), ...(()=>{ const dt=this.deskText(), dark=s.theme==='dark'; return { deskText:dt, deskHasText:!!dt, deskNoText:!dt, deskCopy:this.deskCopy, deskCopyLabel:s.copied==='desk'?'Copié ✓':'Copier le résumé',
+        deskContacts:this.DESK_CONTACTS.map(c=>({name:c.name,sub:c.sub,disp:c.disp,href:'tel:'+c.tel})), theme:dark?'dark':'light', toggleTheme:this.toggleTheme,
+        themeTrack:'width:34px;height:20px;border-radius:12px;flex-shrink:0;position:relative;background:'+(dark?'#0057a8':'#cbd5e1'),
+        themeKnob:'position:absolute;top:2px;left:'+(dark?'16px':'2px')+';width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)' }; })(), show, homeBar: sc==='home', canBack: sc!=='home', barTitle, barSub, etab,
       veille: this.props.veille!==false,
       back:this.back, goHome:this.goHome, goContacts:this.goContacts, goSettings:this.goSettings, goFiche:this.goFiche,
       startMers:this.startMers, startMpox:this.startMpox, restart:this.restart, fhvCards, ag:{short:a.short,name:a.name,family:a.family,windowTxt:String(a.window)},
