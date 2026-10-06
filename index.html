@@ -177,6 +177,20 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
               </div>
             </div>
 
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#0057a8;margin:22px 0 10px;display:flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#0057a8"></span>Aide au recueil · Ebola</div>
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div onClick="{{ openInterp }}" style="display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer">
+                <div style="width:42px;height:42px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10.5px;font-weight:700;color:#1d4ed8;letter-spacing:.3px">EN·LN</div>
+                <div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:700;color:#0f2d52">Questions patient traduites</div><div style="font-size:11.5px;color:#64748b;margin-top:2px;line-height:1.35">Anglais · Lingala — réponses oui / non</div></div>
+                <div style="font-size:20px;color:#cbd5e1">›</div>
+              </div>
+              <div onClick="{{ openSpf }}" style="display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer;border-top:1px solid #f1f4f8">
+                <div style="width:42px;height:42px;border-radius:12px;background:#f1f4f8;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:#0f2d52;letter-spacing:.3px">SPF</div>
+                <div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:700;color:#0f2d52">Questionnaire de classement</div><div style="font-size:11.5px;color:#64748b;margin-top:2px;line-height:1.35">Recueil structuré · résumé à copier</div></div>
+                <div style="font-size:20px;color:#cbd5e1">›</div>
+              </div>
+            </div>
+
             <div style="text-align:center;font-size:10.5px;color:#9aa7b6;margin-top:22px;line-height:1.6">{{ etab }} · SMIT · Unité REB — ESR Océan Indien<br>Aide à la décision — ne se substitue pas à l'avis de l'infectiologue référent</div>
           </div>
         </sc-if>
@@ -184,6 +198,13 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
         <!-- ============ FHV — CLINIQUE ============ -->
         <sc-if value="{{ show.ebClin }}">
           <div style="padding:16px 14px 24px">
+            <sc-if value="{{ isEbola }}">
+              <div onClick="{{ openInterp }}" style="display:flex;align-items:center;gap:10px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:13px;padding:10px 12px;margin-bottom:11px;cursor:pointer">
+                <span style="flex-shrink:0;font-size:10px;font-weight:700;color:#fff;background:#1d4ed8;border-radius:7px;padding:5px 7px">EN·LN</span>
+                <span style="flex:1;min-width:0;font-size:12.5px;color:#1d4ed8;line-height:1.35"><b>Patient non francophone&nbsp;?</b> Questions traduites anglais / lingala</span>
+                <span style="font-size:18px;color:#93c5fd">›</span>
+              </div>
+            </sc-if>
             <div style="background:#fff;border:1px solid #eceff3;border-radius:18px;padding:18px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
               <div style="font-size:17px;font-weight:700;color:#0f2d52;line-height:1.35">Le patient présente-t-il ≥ 1 critère évocateur de {{ ag.short }}&nbsp;?</div>
               <div style="font-size:12.5px;color:#64748b;margin:7px 0 15px;line-height:1.5">Cocher tous les signes présents — un seul critère suffit.</div>
@@ -322,6 +343,13 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
               <div onClick="{{ goFiche }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#0057a8;border-radius:14px;padding:14px;font-size:13.5px;font-weight:600;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,87,168,.25)">▤ Fiche résumé</div>
               <div onClick="{{ goContacts }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#fff;border:1.5px solid #dfe5ec;border-radius:14px;padding:14px;font-size:13.5px;font-weight:600;color:#0057a8;cursor:pointer">☎ Contacts</div>
             </div>
+            <sc-if value="{{ isEbola }}">
+              <div onClick="{{ openSpf }}" style="display:flex;align-items:center;gap:11px;margin-top:9px;background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:14px;padding:12px 14px;cursor:pointer">
+                <span style="flex-shrink:0;font-size:10.5px;font-weight:700;color:#fff;background:#0057a8;border-radius:7px;padding:5px 7px">SPF</span>
+                <span style="flex:1;min-width:0;font-size:13px;color:#0f2d52;line-height:1.35"><b>Questionnaire de classement SPF</b><br><span style="font-size:11.5px;color:#64748b">Recueil à transmettre avant discussion du classement</span></span>
+                <span style="font-size:18px;color:#93c5fd">›</span>
+              </div>
+            </sc-if>
             <div onClick="{{ restart }}" style="text-align:center;padding:14px;margin-top:9px;border:1.5px solid #dfe5ec;border-radius:14px;font-size:14px;font-weight:600;color:#475569;cursor:pointer">↺ Nouveau patient</div>
           </div>
         </sc-if>
@@ -647,6 +675,131 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
           </div>
         </sc-if>
 
+        <!-- ============ AIDE INTERPRÈTE ============ -->
+        <sc-if value="{{ show.interp }}">
+          <div style="padding:14px 14px 26px">
+            <div style="display:flex;gap:4px;background:#e6ebf1;border-radius:13px;padding:4px">
+              <div onClick="{{ setLangLn }}" style="{{ ipTabLn }}">Lingala</div>
+              <div onClick="{{ setLangEn }}" style="{{ ipTabEn }}">English</div>
+            </div>
+            <div style="font-size:12px;color:#64748b;line-height:1.5;margin:10px 2px 0">Lire ou montrer la <b style="color:#0f2d52">ligne en gras</b> au patient — la ligne grise est la question en français.</div>
+            <div style="font-size:12px;color:#1d4ed8;line-height:1.5;margin:4px 2px 0">{{ ipHint }}</div>
+            <sc-for list="{{ ipSections }}" as="sec" hint-placeholder-count="0">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#94a3b5;margin:16px 2px 8px">{{ sec.t }}</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ sec.items }}" as="q" hint-placeholder-count="0">
+                  <div style="background:#fff;border:1px solid #eceff3;border-radius:14px;padding:13px 14px;box-shadow:0 1px 2px rgba(16,42,77,.04)">
+                    <div style="font-size:16.5px;font-weight:700;color:#0f2d52;line-height:1.35;text-wrap:pretty">{{ q.tr }}</div>
+                    <div style="font-size:12px;color:#8a99ab;margin-top:4px;line-height:1.4">{{ q.fr }}</div>
+                    <sc-if value="{{ q.isYn }}">
+                      <div style="display:flex;gap:6px;margin-top:10px">
+                        <sc-for list="{{ q.opts }}" as="o" hint-placeholder-count="0"><div onClick="{{ o.onClick }}" style="{{ o.st }}">{{ o.l }}</div></sc-for>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ q.isNum }}">
+                      <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+                        <input type="number" inputmode="numeric" min="0" max="90" value="{{ q.val }}" onChange="{{ q.onInput }}" placeholder="—" style="width:90px;padding:10px 12px;border:1.5px solid #dfe5ec;border-radius:11px;font-size:16px;font-family:inherit;color:#0f2d52;background:#fbfcfd;outline:none" />
+                        <span style="font-size:13px;color:#64748b">jours</span>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+            <details style="margin-top:14px;background:#fff;border:1px solid #eceff3;border-radius:14px;padding:12px 14px">
+              <summary style="font-size:13px;font-weight:600;color:#0057a8;cursor:pointer">Les chiffres de 1 à 21</summary>
+              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px;margin-top:10px">
+                <sc-for list="{{ ipNums }}" as="n" hint-placeholder-count="0"><div style="display:flex;gap:8px;font-size:13px;color:#1a2230;line-height:1.3"><b style="color:#0057a8;min-width:20px">{{ n.n }}</b><span>{{ n.w }}</span></div></sc-for>
+              </div>
+            </details>
+            <div style="background:#0f2d52;border-radius:16px;padding:15px;margin-top:14px">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#7fb0e8">Réponses recueillies · {{ ipCount }}</div>
+              <sc-if value="{{ ipHasAns }}">
+                <div style="display:flex;flex-direction:column;gap:5px;margin-top:10px">
+                  <sc-for list="{{ ipAnsList }}" as="r" hint-placeholder-count="0"><div style="display:flex;gap:10px;font-size:12.5px;color:#e6eef8;line-height:1.4"><span style="flex:1;min-width:0">{{ r.q }}</span><b style="flex-shrink:0;color:#fff">{{ r.a }}</b></div></sc-for>
+                </div>
+                <div onClick="{{ ipToSpf }}" style="margin-top:12px;background:#fff;color:#0057a8;border-radius:11px;padding:12px;text-align:center;font-size:13px;font-weight:600;cursor:pointer">→ Reporter dans le questionnaire SPF</div>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <div onClick="{{ ipCopy }}" style="flex:1;border:1px solid rgba(255,255,255,.28);color:#e6eef8;border-radius:11px;padding:11px;text-align:center;font-size:12.5px;font-weight:600;cursor:pointer">{{ ipCopyLabel }}</div>
+                  <div onClick="{{ ipReset }}" style="flex:1;border:1px solid rgba(255,255,255,.28);color:#e6eef8;border-radius:11px;padding:11px;text-align:center;font-size:12.5px;font-weight:600;cursor:pointer">Effacer</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ ipNoAns }}">
+                <div style="font-size:12.5px;color:#c8dcf5;margin-top:8px;line-height:1.5">Touchez Oui / Non sous chaque question pour garder une trace des réponses.</div>
+              </sc-if>
+            </div>
+            <a href="docs/Questionnaire_patient_lingala_anglais_Reunion.docx" download="" style="display:block;text-align:center;font-size:12px;color:#0057a8;margin-top:12px;text-decoration:none">Document source FR / EN / Lingala (.docx) ↓</a>
+          </div>
+        </sc-if>
+
+        <!-- ============ QUESTIONNAIRE SPF ============ -->
+        <sc-if value="{{ show.spf }}">
+          <div style="padding:14px 14px 26px">
+            <div style="background:#fff;border:1px solid #eceff3;border-radius:16px;padding:14px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
+              <div style="font-size:15px;font-weight:700;color:#0f2d52;line-height:1.3">Évaluation d'un patient suspect d'Ebola en vue de son classement</div>
+              <div style="font-size:12px;color:#64748b;margin-top:5px;line-height:1.5">Trame Santé publique France · Ebola Bundibugyo, RDC · version du 14/09/2026. Remplir pendant l'entretien, puis copier le résumé (SPF, ARS, dossier).</div>
+              <div style="display:flex;align-items:center;gap:9px;margin-top:11px">
+                <div style="flex:1;height:6px;border-radius:4px;background:#eef2f6;overflow:hidden"><div style="height:100%;border-radius:4px;background:#0057a8;width:{{ spfPct }}"></div></div>
+                <span style="font-size:11.5px;font-weight:600;color:#0057a8">{{ spfCountLabel }}</span>
+              </div>
+            </div>
+            <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:10px 12px;margin-top:10px;font-size:11.5px;color:#92702a;line-height:1.45"><b>Confidentialité&nbsp;:</b> rien n'est enregistré sur l'appareil — données effacées à la fermeture ou via « Nouveau patient ».</div>
+            <details style="margin-top:10px;background:#fff;border:1px solid #eceff3;border-radius:14px;padding:12px 14px">
+              <summary style="font-size:13px;font-weight:600;color:#0057a8;cursor:pointer">Information à délivrer au patient (RGPD)</summary>
+              <div style="font-size:12px;color:#475569;line-height:1.55;margin-top:9px">Vos données font l'objet d'un traitement informatisé sous la responsabilité de Santé publique France et ayant pour finalité l'exécution de sa mission d'intérêt public de réponse à une alerte sanitaire (L. 1413-1 CSP). Elles seront conservées au plus tard 2 ans après la fin de l'investigation (5 ans en cas de procédure judiciaire). Vous disposez d'un droit d'accès, de rectification, d'effacement, d'opposition et de limitation, à exercer auprès de : Santé publique France, DPO, 12 rue du Val d'Osne, 94415 Saint-Maurice Cedex — dpo@santepubliquefrance.fr</div>
+            </details>
+            <sc-for list="{{ spfSections }}" as="sec" hint-placeholder-count="0">
+              <div style="background:#fff;border:1px solid #eceff3;border-radius:16px;margin-top:10px;overflow:hidden">
+                <div onClick="{{ sec.toggle }}" style="display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer">
+                  <span style="{{ sec.numSt }}">{{ sec.n }}</span>
+                  <span style="flex:1;min-width:0;font-size:14px;font-weight:700;color:#0f2d52;line-height:1.25">{{ sec.t }}</span>
+                  <span style="font-size:11.5px;color:#8a99ab;flex-shrink:0">{{ sec.count }}</span>
+                  <span style="font-size:12px;color:#94a3b5;width:12px;text-align:center;flex-shrink:0">{{ sec.chev }}</span>
+                </div>
+                <sc-if value="{{ sec.open }}">
+                  <div style="padding:0 14px 6px">
+                    <sc-if value="{{ sec.hasNote }}">
+                      <div style="font-size:11.5px;color:#92702a;background:#fffbeb;border-radius:9px;padding:8px 10px;margin-bottom:8px;line-height:1.45">{{ sec.note }}</div>
+                    </sc-if>
+                    <sc-for list="{{ sec.items }}" as="it" hint-placeholder-count="0">
+                      <div style="padding:10px 0;border-top:1px solid #f1f4f8">
+                        <sc-if value="{{ it.isRow }}">
+                          <div style="display:flex;align-items:center;gap:10px">
+                            <div style="flex:1;min-width:0;font-size:13px;color:#1a2230;line-height:1.35">{{ it.l }}</div>
+                            <div style="display:flex;gap:4px;flex-shrink:0"><sc-for list="{{ it.opts }}" as="o" hint-placeholder-count="0"><div onClick="{{ o.onClick }}" style="{{ o.st }}">{{ o.l }}</div></sc-for></div>
+                          </div>
+                        </sc-if>
+                        <sc-if value="{{ it.isStack }}">
+                          <div style="font-size:13px;color:#1a2230;line-height:1.35;margin-bottom:8px">{{ it.l }}</div>
+                          <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ it.opts }}" as="o" hint-placeholder-count="0"><div onClick="{{ o.onClick }}" style="{{ o.st }}">{{ o.l }}</div></sc-for></div>
+                        </sc-if>
+                        <sc-if value="{{ it.isInput }}">
+                          <div style="font-size:12.5px;color:#475569;line-height:1.35;margin-bottom:6px">{{ it.l }}</div>
+                          <input type="{{ it.type }}" value="{{ it.val }}" onChange="{{ it.onInput }}" placeholder="{{ it.ph }}" style="width:100%;padding:10px 12px;border:1.5px solid #dfe5ec;border-radius:11px;font-size:14px;font-family:inherit;color:#0f2d52;background:#fbfcfd;outline:none" />
+                        </sc-if>
+                        <sc-if value="{{ it.isLong }}">
+                          <div style="font-size:12.5px;color:#475569;line-height:1.35;margin-bottom:6px">{{ it.l }}</div>
+                          <textarea rows="2" value="{{ it.val }}" onChange="{{ it.onInput }}" placeholder="{{ it.ph }}" style="width:100%;padding:10px 12px;border:1.5px solid #dfe5ec;border-radius:11px;font-size:14px;font-family:inherit;color:#0f2d52;background:#fbfcfd;outline:none;resize:vertical"></textarea>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+            <div onClick="{{ spfCopy }}" style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:14px;background:#0057a8;border-radius:14px;padding:14px;font-size:14px;font-weight:600;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,87,168,.25)">{{ spfCopyLabel }}</div>
+            <details style="margin-top:9px;background:#fff;border:1px solid #eceff3;border-radius:14px;padding:12px 14px">
+              <summary style="font-size:13px;font-weight:600;color:#0057a8;cursor:pointer">Aperçu du résumé</summary>
+              <pre style="white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:11.5px;color:#334155;line-height:1.5;margin:9px 0 0">{{ spfText }}</pre>
+            </details>
+            <div style="display:flex;gap:9px;margin-top:9px">
+              <div onClick="{{ openInterp }}" style="flex:1;text-align:center;padding:13px;border:1.5px solid #dfe5ec;background:#fff;border-radius:14px;font-size:13px;font-weight:600;color:#0057a8;cursor:pointer">EN · LN Questions</div>
+              <div onClick="{{ spfReset }}" style="flex:1;text-align:center;padding:13px;border:1.5px solid #dfe5ec;background:#fff;border-radius:14px;font-size:13px;font-weight:600;color:#475569;cursor:pointer">Effacer le recueil</div>
+            </div>
+            <a href="docs/questionnaire-classement-ebola-20260914.docx" download="" style="display:block;text-align:center;font-size:12px;color:#0057a8;margin-top:12px;text-decoration:none">Questionnaire officiel SPF (.docx) ↓</a>
+          </div>
+        </sc-if>
+
         <!-- ============ CONTACTS ============ -->
         <sc-if value="{{ show.contacts }}">
           <div style="padding:18px 16px 26px">
@@ -837,13 +990,201 @@ class Component extends DCLogic {
   startFhv = (k)=>{ this.setState({agent:k,screen:'eb_clin',ebSym:[],ebVA:[],ebVB:false,ebVC:false,ebSub:null}); this.scrollTop(); };
   startMers = ()=>{ this.setState({screen:'me_intro',meClin:null}); this.scrollTop(); };
   startMpox = ()=>{ this.setState({screen:'mp_intro'}); this.scrollTop(); };
-  restart = ()=>{ this.setState({lastResult:null}); this.go('home'); };
+  restart = ()=>{ this.setState({lastResult:null,spf:{},ip:{},toolStack:[]}); this.go('home'); };
+
+  openTool(t){ const st=(this.state.toolStack||[]).concat([this.state.screen]); this.setState({toolStack:st}); this.go(t); }
+  openInterp = ()=>this.openTool('interp');
+  openSpf = ()=>this.openTool('spf');
+  setLangLn = ()=>this.setState({lang:'ln'});
+  setLangEn = ()=>this.setState({lang:'en'});
+  setIp = (k,v)=>this.setState(s=>{ const ip=Object.assign({},s.ip); if(ip[k]===v) delete ip[k]; else ip[k]=v; return {ip}; });
+  setIpNum = (k,v)=>this.setState(s=>{ const ip=Object.assign({},s.ip); if(v===''||v==null) delete ip[k]; else ip[k]=v; return {ip}; });
+  setSpf = (k,v,toggle)=>this.setState(s=>{ const spf=Object.assign({},s.spf); if(toggle&&spf[k]===v) delete spf[k]; else spf[k]=v; return {spf}; });
+  toggleChip = (k,v)=>this.setState(s=>{ const spf=Object.assign({},s.spf); const a=(spf[k]||[]).slice(); const i=a.indexOf(v); i<0?a.push(v):a.splice(i,1); spf[k]=a; return {spf}; });
+  ipReset = ()=>this.setState({ip:{}});
+  spfReset = ()=>{ if(typeof confirm!=='function'||confirm('Effacer toutes les réponses du questionnaire ?')) this.setState({spf:{}}); };
+  daysAgo(n){ const d=new Date(); d.setDate(d.getDate()-Number(n)); return d.toISOString().slice(0,10); }
+  ipToSpf = ()=>{
+    const ip=this.state.ip||{}, spf=Object.assign({},this.state.spf);
+    const map={fievre:'fievre',fatigue:'s_asthenie',tete:'s_cephalees',ventre:'s_abdo',dAvaler:'s_deglut',diffAvaler:'s_deglut',peau:'s_eruption',diarrhee:'s_diarrhee',vomit:'s_vomit',saigne:'s_hemo',contact:'contactMalade'};
+    Object.keys(map).forEach(k=>{ const t=map[k]; if(ip[k]&&(!spf[t]||(t==='s_deglut'&&ip[k]==='Oui'))) spf[t]=ip[k]; });
+    if(ip.jSym&&!spf.dSignes) spf.dSignes=this.daysAgo(ip.jSym);
+    if(ip.jQuit&&!spf.dDepart) spf.dDepart=this.daysAgo(ip.jQuit);
+    if(!spf.interroge) spf.interroge='Patient';
+    this.setState({spf,spfOpen:2}); this.openTool('spf');
+  };
+  copyText(txt,key){ const done=()=>{ this.setState({copied:key}); clearTimeout(this._cpT); this._cpT=setTimeout(()=>this.setState({copied:null}),2200); };
+    const fb=()=>{ const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} ta.remove(); done(); };
+    if(navigator.clipboard&&window.isSecureContext) navigator.clipboard.writeText(txt).then(done,fb); else fb(); }
+  ipCopy = ()=>this.copyText(this.ipText(),'ip');
+  spfCopy = ()=>this.copyText(this.spfText(),'spf');
+
+  IP = [
+    {t:'Accueil', items:[
+      {fr:'Bonjour,', en:'Hello,', ln:'Mbote,'},
+      {fr:'Je suis médecin, je veux vous aider.', en:'I am a doctor, I want to help you.', ln:'Nazali monganga mpe nalingi kosalisa bino.'},
+      {fr:'Comment vous appelez-vous ?', en:'What is your name?', ln:'Nkombo na bino nani ?'},
+      {fr:'Pouvez-vous répondre par oui ou par non aux questions que je vais vous poser, ou m’indiquer un chiffre précis ?', en:'Can you answer the questions I am going to ask you with yes or no, or give me an exact number?', ln:'Bokoki koyanola na “ɛɛ” to “te” na mituna oyo nakotuna bino, to kopesa motango ya sikisiki.'}]},
+    {t:'Provenance & exposition', items:[
+      {k:'pays', y:1, s:'Retour de RDC / Soudan du Sud', fr:'Revenez-vous de République démocratique du Congo ou du Soudan du Sud ?', en:'Have you returned from the Democratic Republic of the Congo or from South Sudan?', ln:'Bouti na République démocratique du Congo to Sud-Soudan ?'},
+      {k:'prov', y:1, s:'Province à risque de RDC', fr:'Revenez-vous d’une des provinces suivantes de RDC : ITURI / NORD-KIVU / SUD-KIVU / HAUT-UÉLÉ / BAS-UÉLÉ / TSHOPO / SUD-UBANGI ?', en:'Have you returned from one of the following provinces of the Democratic Republic of the Congo: Ituri / North Kivu / South Kivu / Haut-Uélé / Bas-Uélé / Tshopo / Sud-Ubangi?', ln:'Bouti na moko ya bitúká oyo ya République démocratique du Congo : ITURI / KIVU YA NORDI / SUD KIVU / HAUT-UÉLÉ / BAS-UÉLÉ / TSHOPO / SUD-UBANGI ?'},
+      {k:'jQuit', n:1, s:'Départ du pays (jours)', fr:'Depuis combien de jours avez-vous quitté ce pays ?', en:'How many days ago did you leave this country?', ln:'Mikolo boni bolongwa na mboka ?'},
+      {k:'contact', y:1, s:'Contact avec un malade d’Ebola', fr:'Avez-vous rencontré un malade d’Ebola ?', en:'Have you been in contact with a person infected with Ebola?', ln:'Bokutanaki na mutu oyo azalaki na maladi ya Ebola ?'}]},
+    {t:'Symptômes', items:[
+      {k:'fievre', y:1, s:'Fièvre', fr:'Avez-vous de la fièvre ?', en:'Do you have a fever?', ln:'Bozali na fièvre ?'},
+      {k:'fatigue', y:1, s:'Fatigue', fr:'Vous sentez-vous fatigué ?', en:'Do you feel tired?', ln:'Bozali koyoka bolembu ?'},
+      {k:'tete', y:1, s:'Céphalées', fr:'Avez-vous mal à la tête ?', en:'Do you have a headache?', ln:'Bozali na pasi na mutu ?'},
+      {k:'ventre', y:1, s:'Douleurs abdominales', fr:'Avez-vous des douleurs au niveau du ventre ?', en:'Do you have abdominal pain?', ln:'Bozo yoka pasi na libumu ?'},
+      {k:'dAvaler', y:1, s:'Douleur à la déglutition', fr:'Avez-vous des douleurs lorsque vous avalez un aliment ?', en:'Do you have pain when swallowing food?', ln:'Boza na pasi tango bozo lia eloko ?'},
+      {k:'diffAvaler', y:1, s:'Difficulté à avaler', fr:'Avez-vous des difficultés à avaler les aliments ?', en:'Do you have difficulty swallowing food?', ln:'Boza na mokakatano ya komela to koliya ?'},
+      {k:'peau', y:1, s:'Boutons / éruption cutanée', fr:'Avez-vous des boutons sur la peau ?', en:'Do you have any skin rash or skin spots?', ln:'Bozali na bambuma to bapota na loposo ?'},
+      {k:'diarrhee', y:1, s:'Diarrhée', fr:'Avez-vous des diarrhées ?', en:'Do you have diarrhea?', ln:'Boza na diarrhée ?'},
+      {k:'vomit', y:1, s:'Vomissements', fr:'Avez-vous des vomissements ?', en:'Are you vomiting?', ln:'Boza kosanza ?'},
+      {k:'saigne', y:1, s:'Saignements', fr:'Saignez-vous ?', en:'Are you bleeding?', ln:'Boza kobomisa makila ?'},
+      {k:'jSym', n:1, s:'Début des symptômes (jours)', fr:'Depuis combien de jours ont commencé les symptômes ?', en:'How many days ago did the symptoms start?', ln:'Mikolo boni bilembo ya maladi ebandaki ?'}]},
+    {t:'Consignes au patient', items:[
+      {fr:'Restez ici, ne sortez pas de cet endroit.', en:'Stay here, do not leave this place.', ln:'Bótikala awa, bobima te na esika oyo.'},
+      {fr:'Des soignants vont venir vous chercher en tenue de protection, pour aller à l’hôpital de Saint-Denis (CHU de La Réunion) faire des examens, notamment pour Ebola.', en:'Healthcare workers will come to pick you up in protective gear to take you to Saint-Denis hospital (CHU de La Réunion) for tests, including for Ebola.', ln:'Basaleli ya bokolongono bakoya kozwa bino balati bilamba ya bokengi mpo na kokende na lopitalo ya Saint-Denis (CHU de La Réunion) kosala ba examens, mingimingi mpo na Ebola.'},
+      {fr:'Nous allons vous soigner.', en:'We will take care of you.', ln:'Tokobatela mpe tokosalisa bino.'},
+      {fr:'Cela va prendre plusieurs jours.', en:'It will take several days.', ln:'Yango ekoki kozwa mikolo mingi.'},
+      {fr:'Ne touchez à rien autour de vous jusqu’à votre arrivée à l’hôpital, où vous allez être conduit dans un endroit isolé pour éviter de transmettre la maladie à d’autres personnes.', en:'Do not touch anything around you until you arrive at the hospital, where you will be taken to an isolated area to prevent spreading the disease to other people.', ln:'Bo simba eloko moko te pene pene na bino kino boko koma na lopitalo, epai bakotia bino na esika ya kokabwana mpo na kopekisa bopanzi ya maladi epai ya bato mosusu'}]}
+  ];
+  NUM_LN = ['moko','mibale','misato','minei','mitano','motoba','nsambo','mwambe','libwa','zomi','zomi na moko','zomi na mibale','zomi na misato','zomi na minei','zomi na mitano','zomi na motoba','zomi na nsambo','zomi na mwambe','zomi na libwa','ntuku mibale','ntuku mibale na moko'];
+  NUM_EN = ['one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty','twenty-one'];
+
+  SPF = [
+    {t:'Entretien & patient', items:[
+      {k:'investig', kind:'long', l:'Investigateur / signalant (nom, tél., institution)'},
+      {k:'interroge', kind:'choice', l:'Personne interrogée', opts:['Patient','Entourage / famille','Médecin en charge']},
+      {k:'interrogeR', kind:'long', l:'Raison (patient inconscient, barrière de la langue, mineur…)', dep:'interroge', depNot:'Patient'},
+      {k:'age', kind:'short', l:'Âge ou date de naissance'},
+      {k:'nat', kind:'short', l:'Nationalité'},
+      {k:'rgpd', kind:'choice', l:'Information RGPD délivrée au patient', opts:['Oui','Non']}]},
+    {t:'Provenance & voyage', note:'Zone à risque susceptible d’évoluer avec l’épidémie — vérifier la liste à jour.', items:[
+      {k:'dDepart', kind:'date', l:'Date de départ vers la France'},
+      {k:'dArrivee', kind:'date', l:'Date d’arrivée en France'},
+      {k:'lieux', kind:'chips', l:'Lieux fréquentés dans les 21 j avant les signes', opts:['Ituri','Nord-Kivu','Sud-Kivu','Haut-Uélé','Bas-Uélé','Tshopo','Sud-Ubangi','Autre']},
+      {k:'lieuxP', kind:'long', l:'Zones de santé, communes, dates d’arrivée / départ'},
+      {k:'symArr', kind:'onn', l:'Symptomatique à l’arrivée en France'},
+      {k:'rapat', kind:'onn', l:'Rapatriement sanitaire'},
+      {k:'rapatEb', kind:'onn', l:'Ebola évoqué par le médecin du rapatriement', dep:'rapat'},
+      {k:'rapatP', kind:'long', l:'Date, compagnie, médecin responsable', dep:'rapat'},
+      {k:'moyen', kind:'short', l:'Moyen de retour (vol, compagnie, kwassa…)'},
+      {k:'hospit', kind:'onn', l:'Hospitalisé actuellement'},
+      {k:'hospitP', kind:'short', l:'Date, hôpital, service', dep:'hospit'}]},
+    {t:'Clinique', items:[
+      {k:'dSignes', kind:'date', l:'Date de début des signes'},
+      {k:'fievre', kind:'onn', l:'Fièvre ≥ 38 °C'},
+      {k:'tmax', kind:'short', l:'T° max et date de début de la fièvre', dep:'fievre'},
+      {k:'s_cephalees', kind:'onn', l:'Maux de tête'},
+      {k:'s_myalgies', kind:'onn', l:'Douleurs musculaires'},
+      {k:'s_arthralgies', kind:'onn', l:'Douleurs articulaires'},
+      {k:'s_asthenie', kind:'onn', l:'Asthénie'},
+      {k:'s_anorexie', kind:'onn', l:'Anorexie'},
+      {k:'s_vomit', kind:'onn', l:'Vomissements'},
+      {k:'s_diarrhee', kind:'onn', l:'Diarrhée'},
+      {k:'s_abdo', kind:'onn', l:'Douleurs abdominales'},
+      {k:'s_hemo', kind:'onn', l:'Hémorragies'},
+      {k:'s_hemoP', kind:'short', l:'Zone(s) anatomique(s)', dep:'s_hemo'},
+      {k:'s_eruption', kind:'onn', l:'Éruption cutanée'},
+      {k:'s_toux', kind:'onn', l:'Toux'},
+      {k:'s_hoquet', kind:'onn', l:'Hoquet'},
+      {k:'s_dyspnee', kind:'onn', l:'Dyspnée'},
+      {k:'s_deglut', kind:'onn', l:'Difficulté de déglutition'},
+      {k:'s_conj', kind:'onn', l:'Conjonctivite'},
+      {k:'s_menin', kind:'onn', l:'Syndrome méningé'},
+      {k:'s_confus', kind:'onn', l:'Confusion'},
+      {k:'s_fcs', kind:'onn', l:'Fausse-couche spontanée'},
+      {k:'s_fcsP', kind:'short', l:'Terme (SA)', dep:'s_fcs'},
+      {k:'s_autre', kind:'long', l:'Autres signes / dates de début / encore présents'}]},
+    {t:'Constantes & biologie', items:[
+      {k:'fr', kind:'short', l:'Fréquence respiratoire (/min)', type:'number'},
+      {k:'fc', kind:'short', l:'Fréquence cardiaque (/min)', type:'number'},
+      {k:'ta', kind:'short', l:'Tension artérielle'},
+      {k:'bio', kind:'onn', l:'Biologie réalisée avant le signalement'},
+      {k:'bioP', kind:'long', l:'Hb, GB, PNN, lymphocytes, créatinine, transaminases', dep:'bio'},
+      {k:'palu', kind:'choice', l:'Recherche de paludisme', opts:['Positif','Négatif','Non réalisée']},
+      {k:'chimio', kind:'short', l:'Chimioprophylaxie antipalustre pendant le séjour (molécule)'}]},
+    {t:'Expositions à risque (21 j)', note:'Dans la zone à risque, au cours des 21 jours précédant le début des signes.', items:[
+      {k:'contactMalade', kind:'onn', l:'Contact direct avec un malade hors soins (fluides, linge, même toit)'},
+      {k:'contactP', kind:'long', l:'Symptômes, tableau compatible / confirmé, date du dernier contact', dep:'contactMalade'},
+      {k:'pds', kind:'onn', l:'Professionnel de santé (y c. tradipraticien, laboratoire, brancardier)'},
+      {k:'pdsP', kind:'long', l:'Fonction, pays, district, établissement(s) ; prise en charge de cas compatibles ou de leurs échantillons ?', dep:'pds'},
+      {k:'hospZone', kind:'onn', l:'Hospitalisé ou a consulté dans la zone pour une autre affection'},
+      {k:'hospZoneP', kind:'long', l:'Motif, hôpital / service, cas d’Ebola pris en charge ?, gestes invasifs, dates', dep:'hospZone'},
+      {k:'tradi', kind:'onn', l:'Soins reçus d’un tradipraticien'},
+      {k:'tradiP', kind:'long', l:'District, localité, soins effectués', dep:'tradi'},
+      {k:'visite', kind:'onn', l:'Visite à un patient dans un hôpital ayant pris en charge des cas'},
+      {k:'visiteP', kind:'long', l:'Hôpital, service, dernière date, motif d’hospitalisation', dep:'visite'},
+      {k:'funer', kind:'onn', l:'Participation à des funérailles'},
+      {k:'funerP', kind:'long', l:'Enterrement digne et sécurisé ?, portage du corps, soins post-mortem, inhumation, date, lieu, contexte du décès', dep:'funer'},
+      {k:'viande', kind:'onn', l:'Viande de brousse manipulée ou consommée'},
+      {k:'viandeP', kind:'long', l:'Espèces, crue / peu cuite, manipulée à mains nues', dep:'viande'},
+      {k:'animaux', kind:'onn', l:'Contact avec des animaux sauvages (vivants ou morts)'},
+      {k:'animauxP', kind:'long', l:'Rongeurs, chauves-souris, antilopes, primates… date et lieu du dernier contact', dep:'animaux'},
+      {k:'labo', kind:'onn', l:'Travail en laboratoire (virus, primates, chauves-souris)'},
+      {k:'laboP', kind:'short', l:'Laboratoire et type de travail', dep:'labo'},
+      {k:'sexe', kind:'onn', l:'Rapport sexuel avec une personne guérie d’Ebola'},
+      {k:'sexeP', kind:'date', l:'Date du dernier rapport', dep:'sexe'},
+      {k:'brousse', kind:'onn', l:'Séjour en brousse (diagnostics différentiels CNR)'},
+      {k:'brousseP', kind:'short', l:'Pays et région', dep:'brousse'}]},
+    {t:'Classement', note:'Classement discuté et acté avec le médecin spécialiste REB.', items:[
+      {k:'classe', kind:'choice', l:'Classification du cas', opts:['Cas possible','Cas exclu']},
+      {k:'medecin', kind:'long', l:'Médecin REB ayant validé le classement (nom, établissement)'},
+      {k:'comment', kind:'long', l:'Commentaires'}]}
+  ];
+
+  filled(v){ return v!=null&&v!==''&&!(Array.isArray(v)&&!v.length); }
+  fmtDate(v){ const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(v||''); return m?(m[3]+'/'+m[2]+'/'+m[1]):v; }
+  spfVisible(it,v){ if(!it.dep) return true; return it.depNot?(this.filled(v[it.dep])&&v[it.dep]!==it.depNot):v[it.dep]==='Oui'; }
+  spfText(){ const v=this.state.spf||{}; const L=['QUESTIONNAIRE DE CLASSEMENT — SUSPICION EBOLA','Trame SPF v. 14/09/2026 · recueil du '+new Date().toLocaleDateString('fr-FR'),''];
+    this.SPF.forEach(sec=>{ const rows=sec.items.filter(it=>this.spfVisible(it,v)&&this.filled(v[it.k])).map(it=>{ const x=v[it.k]; return '- '+it.l+' : '+(Array.isArray(x)?x.join(', '):it.kind==='date'?this.fmtDate(x):x); });
+      if(rows.length){ L.push(sec.t.toUpperCase()); L.push.apply(L,rows); L.push(''); } });
+    return L.length>3?L.join('\n').trim():'Aucune réponse saisie pour l’instant.'; }
+  ipText(){ const ip=this.state.ip||{}; const L=['Réponses du patient (questionnaire traduit '+(this.state.lang==='en'?'anglais':'lingala')+') — '+new Date().toLocaleDateString('fr-FR')];
+    this.IP.forEach(sec=>sec.items.forEach(q=>{ if(q.k&&this.filled(ip[q.k])) L.push('- '+q.s+' : '+ip[q.k]+(q.n?' j':'')); })); return L.join('\n'); }
+  pill(on,tone,big){ const c=tone==='y'?'#c0392b':tone==='n'?'#475569':tone==='u'?'#94a3b5':'#0057a8';
+    return 'padding:'+(big?'10px 0':'7px 11px')+';'+(big?'flex:1;':'min-width:42px;')+'text-align:center;border-radius:10px;font-size:'+(big?'14px':'12.5px')+';font-weight:600;cursor:pointer;user-select:none;border:1.5px solid '+(on?c:'#dfe5ec')+';background:'+(on?c:'#fff')+';color:'+(on?'#fff':'#475569'); }
+  toolVals(){
+    const s=this.state, ln=(s.lang||'ln')!=='en', ip=s.ip||{}, v=s.spf||{};
+    const tab=(on)=>'flex:1;text-align:center;padding:10px;border-radius:10px;font-size:14px;font-weight:'+(on?'700':'500')+';cursor:pointer;color:'+(on?'#0f2d52':'#64748b')+';background:'+(on?'#fff':'transparent')+';box-shadow:'+(on?'0 1px 3px rgba(16,42,77,.12)':'none');
+    const yesW=ln?'ɛɛ':'Yes', noW=ln?'te':'No';
+    const ipSections=this.IP.map(sec=>({ t:sec.t, items:sec.items.map(q=>({ tr:ln?q.ln:q.en, fr:q.fr, isYn:!!q.y, isNum:!!q.n, val:ip[q.k]||'',
+      onInput:(e)=>this.setIpNum(q.k,e.target.value),
+      opts:q.y?[['Oui','Oui · '+yesW,'y'],['Non','Non · '+noW,'n'],['NSP','?','u']].map(o=>({ l:o[1], st:this.pill(ip[q.k]===o[0],o[2],true), onClick:()=>this.setIp(q.k,o[0]) })):[] })) }));
+    const ipAnsList=[]; this.IP.forEach(sec=>sec.items.forEach(q=>{ if(q.k&&this.filled(ip[q.k])) ipAnsList.push({ q:q.s, a:ip[q.k]+(q.n?' j':'') }); }));
+    const nums=ln?this.NUM_LN:this.NUM_EN;
+    let tot=0, done=0; const open=s.spfOpen==null?0:s.spfOpen;
+    const spfSections=this.SPF.map((sec,i)=>{ const vis=sec.items.filter(it=>this.spfVisible(it,v)); const f=vis.filter(it=>this.filled(v[it.k])).length; tot+=vis.length; done+=f; const isOpen=open===i;
+      return { t:sec.t, n:String(i+1), open:isOpen, chev:isOpen?'▾':'▸', count:f+'/'+vis.length, hasNote:!!sec.note, note:sec.note||'',
+        numSt:'width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;'+(f&&f===vis.length?'background:#0057a8;color:#fff':f?'background:#dbeafe;color:#0057a8':'background:#f1f4f8;color:#64748b'),
+        toggle:()=>this.setState({spfOpen:isOpen?-1:i}),
+        items:vis.map(it=>{ const x=v[it.k]; const sub=!!it.dep; const lab=(sub?'↳ ':'')+it.l;
+          const isOnn=it.kind==='onn', isCh=it.kind==='choice'||it.kind==='chips';
+          let opts=[];
+          if(isOnn) opts=[['Oui','y'],['Non','n'],['NSP','u']].map(o=>({ l:o[0], st:this.pill(x===o[0],o[1],false), onClick:()=>this.setSpf(it.k,o[0],true) }));
+          else if(it.kind==='chips') opts=it.opts.map(o=>({ l:o, st:this.pill((x||[]).indexOf(o)>=0,'b',false), onClick:()=>this.toggleChip(it.k,o) }));
+          else if(it.kind==='choice') opts=it.opts.map(o=>({ l:o, st:this.pill(x===o,'b',false), onClick:()=>this.setSpf(it.k,o,true) }));
+          return { l:lab, isRow:isOnn, isStack:isCh, isInput:it.kind==='short'||it.kind==='date', isLong:it.kind==='long', type:it.kind==='date'?'date':(it.type||'text'), val:x||'', ph:'', opts,
+            onInput:(e)=>this.setSpf(it.k,e.target.value,false) }; }) }; });
+    return {
+      isEbola: s.agent==='eb',
+      openInterp:this.openInterp, openSpf:this.openSpf, setLangLn:this.setLangLn, setLangEn:this.setLangEn,
+      ipTabLn:tab(ln), ipTabEn:tab(!ln), ipHint: ln?'Prononciation : ɛ se lit « è » · Oui = ɛɛ · Non = te':'Yes = oui · No = non',
+      ipSections, ipNums:nums.map((w,i)=>({n:String(i+1),w})), ipAnsList, ipHasAns:ipAnsList.length>0, ipNoAns:ipAnsList.length===0,
+      ipCount: ipAnsList.length+' réponse'+(ipAnsList.length>1?'s':''), ipToSpf:this.ipToSpf, ipCopy:this.ipCopy, ipReset:this.ipReset,
+      ipCopyLabel: s.copied==='ip'?'Copié ✓':'Copier',
+      spfSections, spfPct: (tot?Math.round(done/tot*100):0)+'%', spfCountLabel: done+'/'+tot,
+      spfText:this.spfText(), spfCopy:this.spfCopy, spfReset:this.spfReset, spfCopyLabel: s.copied==='spf'?'Résumé copié ✓':'Copier le résumé'
+    };
+  }
 
   back = ()=>{
     const m={ eb_clin:'home', eb_zone:'eb_clin', eb_crit:'eb_zone', eb_profil:'eb_crit', eb_res:'eb_profil', eb_none:'home', eb_exclu:'home',
       me_intro:'home', me_clin:'me_intro', me_immuno:'me_clin', me_expo:'me_clin', me_res_p:'me_expo', me_res_i:'me_clin',
       mp_intro:'home', mp_clin:'mp_intro', mp_epi:'mp_clin', mp_res_p:'mp_epi', mp_res_i:'mp_clin',
       fiche:'home', contacts:'home', settings:'home' };
+    if(this.state.screen==='interp'||this.state.screen==='spf'){ const st=(this.state.toolStack||[]).slice(); const p=st.pop()||'home'; this.setState({toolStack:st}); this.go(p); return; }
     this.go(m[this.state.screen]||'home');
   };
 
@@ -983,11 +1324,11 @@ class Component extends DCLogic {
     const show={ home:sc==='home', ebClin:sc==='eb_clin', ebZone:sc==='eb_zone', ebCrit:sc==='eb_crit', ebProfil:sc==='eb_profil', ebRes:sc==='eb_res', ebNone:sc==='eb_none', ebExclu:sc==='eb_exclu',
       meIntro:sc==='me_intro', meClin:sc==='me_clin', meImmuno:sc==='me_immuno', meExpo:sc==='me_expo', meResP:sc==='me_res_p', meResI:sc==='me_res_i',
       mpIntro:sc==='mp_intro', mpClin:sc==='mp_clin', mpEpi:sc==='mp_epi', mpResP:sc==='mp_res_p', mpResI:sc==='mp_res_i',
-      fiche:sc==='fiche', contacts:sc==='contacts', settings:sc==='settings' };
+      fiche:sc==='fiche', contacts:sc==='contacts', settings:sc==='settings', interp:sc==='interp', spf:sc==='spf' };
     const isEb=sc.indexOf('eb_')===0, isMe=sc.indexOf('me_')===0, isMp=sc.indexOf('mp_')===0;
-    const barTitle = sc==='home'?'Triage REB': isEb?(a.short+' · FHV'): isMe?'MERS-CoV': isMp?'Mpox / Variole': sc==='fiche'?'Fiche résumé': sc==='contacts'?'Contacts d\u2019urgence':'Zones & paramètres';
+    const barTitle = sc==='home'?'Triage REB': isEb?(a.short+' · FHV'): isMe?'MERS-CoV': isMp?'Mpox / Variole': sc==='fiche'?'Fiche résumé': sc==='contacts'?'Contacts d\u2019urgence': sc==='interp'?'Questions traduites': sc==='spf'?'Questionnaire SPF':'Zones & paramètres';
     const etab=this.props.etablissement||'CHU de La Réunion';
-    const barSub = sc==='home'?(etab+' · SMIT — Unité REB'): isEb?a.name: isMe?'Coronavirus respiratoire': isMp?'Orthopoxvirose éruptive': sc==='fiche'?'À imprimer / partager': sc==='contacts'?'Astreintes REB / ESR':'Définition de cas';
+    const barSub = sc==='home'?(etab+' · SMIT — Unité REB'): isEb?a.name: isMe?'Coronavirus respiratoire': isMp?'Orthopoxvirose éruptive': sc==='fiche'?'À imprimer / partager': sc==='contacts'?'Astreintes REB / ESR': sc==='interp'?'Anglais · Lingala — aide à l\u2019entretien': sc==='spf'?'Classement Ebola · v. 14/09/2026':'Définition de cas';
 
     const stepNames=['Clinique','Zone','Critères','Profil'];
     const ebCur={eb_clin:0,eb_zone:1,eb_crit:2,eb_profil:3,eb_res:3}[sc];
@@ -1121,7 +1462,7 @@ class Component extends DCLogic {
     ];
 
     return {
-      show, homeBar: sc==='home', canBack: sc!=='home', barTitle, barSub, etab,
+      ...this.toolVals(), show, homeBar: sc==='home', canBack: sc!=='home', barTitle, barSub, etab,
       veille: this.props.veille!==false,
       back:this.back, goHome:this.goHome, goContacts:this.goContacts, goSettings:this.goSettings, goFiche:this.goFiche,
       startMers:this.startMers, startMpox:this.startMpox, restart:this.restart, fhvCards, ag:{short:a.short,name:a.name,family:a.family,windowTxt:String(a.window)},
