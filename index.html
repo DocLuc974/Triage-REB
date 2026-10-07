@@ -291,7 +291,7 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
           <div style="padding:16px 14px 24px">
             <div style="display:flex;gap:10px;background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #d97706;border-radius:13px;padding:13px;margin-bottom:13px">
               <span style="color:#d97706;font-size:16px">▲</span>
-              <div style="font-size:12.5px;color:#92702a;line-height:1.5"><b style="color:#7a5a12">Cas suspect</b> — Isolement immédiat · Masque chirurgical · Infectiologue REB&nbsp;: <b>06 92 26 75 51</b></div>
+              <div style="font-size:12.5px;color:#92702a;line-height:1.5"><b style="color:#7a5a12">Cas suspect</b> — Isolement immédiat · Masque chirurgical · Infectiologue REB&nbsp;: <b>06 92 26 76 51</b></div>
             </div>
             <div style="background:#fff;border:1px solid #eceff3;border-radius:18px;padding:18px;box-shadow:0 1px 3px rgba(16,42,77,.05)">
               <div style="font-size:16px;font-weight:700;color:#0f2d52;line-height:1.35;margin-bottom:13px">Au moins un critère de cas <span style="color:#dc2626">possible</span>&nbsp;?</div>
@@ -355,7 +355,7 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
             <div style="display:flex;flex-direction:column;gap:7px">
               <div style="background:#fffbeb;border-left:3px solid #d97706;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#92702a;line-height:1.5">⊟ Isolement — chambre seule, porte fermée, matériel dédié</div>
               <div style="background:#fef2f2;border-left:3px solid #dc2626;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#b3322a;line-height:1.5">⚑ Signalement ARS Océan Indien immédiat</div>
-              <div style="background:#eff6ff;border-left:3px solid #2563eb;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#1d4ed8;line-height:1.5">☎ Infectiologue REB SMIT Nord&nbsp;: <b>06 92 26 75 51</b></div>
+              <div style="background:#eff6ff;border-left:3px solid #2563eb;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#1d4ed8;line-height:1.5">☎ Infectiologue REB SMIT Nord&nbsp;: <b>06 92 26 76 51</b></div>
               <div style="background:#fef2f2;border-left:3px solid #dc2626;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#b3322a;line-height:1.5">⚗ Prélèvement CNR FHV — RT-PCR, après validation infectiologue</div>
             </div>
 
@@ -710,7 +710,7 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
                 </sc-for>
               </div>
 
-              <div style="border-top:1px solid #eceff3;margin-top:16px;padding-top:11px;font-size:10.5px;color:#9aa7b6;line-height:1.55">Infectiologue REB SMIT Nord&nbsp;: 06 92 26 75 51 · ARS OI&nbsp;: 02 62 93 94 13 · SAMU&nbsp;: 15<br>Aide à la décision — ne se substitue pas à l'avis de l'infectiologue référent.</div>
+              <div style="border-top:1px solid #eceff3;margin-top:16px;padding-top:11px;font-size:10.5px;color:#9aa7b6;line-height:1.55">Infectiologue REB SMIT Nord&nbsp;: 06 92 26 76 51 · ARS OI&nbsp;: 02 62 93 94 13 · SAMU&nbsp;: 15<br>Aide à la décision — ne se substitue pas à l'avis de l'infectiologue référent.</div>
             </div>
 
             <div class="noprint" style="display:flex;gap:9px;margin-top:14px">
@@ -1016,14 +1016,14 @@ class Component extends DCLogic {
   MER_EPI = ['Masque FFP2 (FFP3 si aérosols)','Protection oculaire','Surblouse imp. UU','Gants UU','Charlotte / coiffe'];
   MP_EPI = ['Masque FFP2','Protection oculaire','Surblouse imp. UU','Double gants UU','Charlotte / coiffe'];
   CONTACTS = [
-    {name:'Infectiologue REB — SMIT Nord',sub:'Astreinte REB · 7j/7',tel:'0692267551',disp:'06 92 26 75 51'},
+    {name:'Infectiologue REB — SMIT Nord',sub:'Astreinte REB · 7j/7',tel:'0692267651',disp:'06 92 26 76 51'},
     {name:'CNR FHV — Institut Pasteur',sub:'24h/24 · nuit 07 87 94 76 47',tel:'0437282440',disp:'04 37 28 24 40'},
     {name:'ARS Océan Indien',sub:'Astreinte régionale',tel:'0262939413',disp:'02 62 93 94 13'},
     {name:'SAMU — Centre 15',sub:'Urgence vitale',tel:'15',disp:'15'}
   ];
-  FHV_ACTIONS = ['Isolement chambre seule, porte fermée, matériel dédié','Signalement ARS Océan Indien immédiat','Appel infectiologue REB SMIT Nord (06 92 26 75 51)','EPI groupe 4 — habillage encadré, ne jamais intervenir seul','Prélèvement CNR FHV (RT-PCR) après validation infectiologue','Surveillance des sujets-contacts selon niveau de risque'];
+  FHV_ACTIONS = ['Isolement chambre seule, porte fermée, matériel dédié','Signalement ARS Océan Indien immédiat','Appel infectiologue REB SMIT Nord (06 92 26 76 51)','EPI groupe 4 — habillage encadré, ne jamais intervenir seul','Prélèvement CNR FHV (RT-PCR) après validation infectiologue','Surveillance des sujets-contacts selon niveau de risque'];
   MERS_ACTIONS = ['Isolement « air + contact » sans délai (chambre seule)','Masque chirurgical porté par le patient','Signalement infectiologue référent + ARS','Prélèvements respiratoires voies basses après validation','RT-PCR MERS-CoV réalisée sur place (labo CHU) — DO si confirmé'];
-  MPOX_ACTIONS = ['Isolement « contact + gouttelettes » (air si forme grave / clade I)','Couvrir les lésions, masque chirurgical patient','Signalement ARS + infectiologue référent','Prélèvement de lésion + écouvillon oropharyngé — PCR orthopoxvirus (triple emballage, pas de pneumatique)','Adulte NORD : jour ouvré → avis 40464 ou CeGIDD 02 62 90 55 69 ; hors horaires → astreinte 06 92 26 75 51 (prélèvement CeGIDD le lendemain) ; signe de gravité → urgences','Adulte SUD : jours ouvrés → CeGIDD 02 62 35 96 30 ; nuit/WE/férié ou hospit → urgences infectieuses dédiées (cf. protocole CHU Sud)','Enfant : NORD sénior UHCD péd 40210 (< 6 ans PEC conjointe infectiologue) ; SUD pédiatre de garde DECT 55194, box chambre 105 UHCD ; précautions contact + respiratoire'];
+  MPOX_ACTIONS = ['Isolement « contact + gouttelettes » (air si forme grave / clade I)','Couvrir les lésions, masque chirurgical patient','Signalement ARS + infectiologue référent','Prélèvement de lésion + écouvillon oropharyngé — PCR orthopoxvirus (triple emballage, pas de pneumatique)','Adulte NORD : jour ouvré → avis 40464 ou CeGIDD 02 62 90 55 69 ; hors horaires → astreinte 06 92 26 76 51 (prélèvement CeGIDD le lendemain) ; signe de gravité → urgences','Adulte SUD : jours ouvrés → CeGIDD 02 62 35 96 30 ; nuit/WE/férié ou hospit → urgences infectieuses dédiées (cf. protocole CHU Sud)','Enfant : NORD sénior UHCD péd 40210 (< 6 ans PEC conjointe infectiologue) ; SUD pédiatre de garde DECT 55194, box chambre 105 UHCD ; précautions contact + respiratoire'];
 
   DEFAULT_ZONE_URL = 'https://docluc974.github.io/Triage-REB/zones-multi-pathogenes.json';
 
@@ -1090,7 +1090,7 @@ class Component extends DCLogic {
   deskCopy = ()=>this.copyText(this.deskText(),'desk');
   toggleTheme = ()=>{ const t=this.state.theme==='dark'?'light':'dark'; try{ localStorage.setItem('reb_theme',t); }catch(e){} this.setState({theme:t}); };
   DESK_CONTACTS = [
-    {name:'Infectiologue REB — SMIT Nord',sub:'Astreinte infectiologie · portable 7j/7',tel:'0692267551',disp:'06 92 26 75 51'},
+    {name:'Infectiologue REB — SMIT Nord',sub:'Astreinte infectiologie · portable 7j/7',tel:'0692267651',disp:'06 92 26 76 51'},
     {name:'Avis infectiologie',sub:'Poste interne · jours ouvrés',tel:'40464',disp:'40464'},
     {name:'CeGIDD Nord',sub:'Mpox adulte · jours ouvrés',tel:'0262905569',disp:'02 62 90 55 69'},
     {name:'ARS Océan Indien',sub:'Signalement · astreinte',tel:'0262939413',disp:'02 62 93 94 13'},
@@ -1342,7 +1342,7 @@ class Component extends DCLogic {
   doPrint = ()=>{ try{ window.print(); }catch(e){} };
   doShare = ()=>{
     const lr=this.state.lastResult; if(!lr) return;
-    const txt='TRIAGE REB — '+lr.agentName+'\n'+lr.badge+' · '+lr.date+'\n\nCritères :\n- '+lr.criteria.join('\n- ')+'\n\nConduite à tenir :\n- '+lr.actions.join('\n- ')+'\n\nInfectiologue REB : 06 92 26 75 51';
+    const txt='TRIAGE REB — '+lr.agentName+'\n'+lr.badge+' · '+lr.date+'\n\nCritères :\n- '+lr.criteria.join('\n- ')+'\n\nConduite à tenir :\n- '+lr.actions.join('\n- ')+'\n\nInfectiologue REB : 06 92 26 76 51';
     if(navigator.share){ navigator.share({title:'Triage REB — '+lr.agentName,text:txt}).catch(()=>{}); }
     else if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>this.setState({shared:true})).catch(()=>{}); }
     else { this.setState({shared:true}); }
@@ -1485,7 +1485,7 @@ class Component extends DCLogic {
       nord:{
         adulte:[
           {head:'Sans signe de gravité · jour ouvré',rest:'appel avis infectiologue 40464 OU CeGIDD 02 62 90 55 69 pour organiser le prélèvement.'},
-          {head:'Sans signe de gravité · hors horaires',rest:'appel astreinte infectieux 06 92 26 75 51 pour organiser le prélèvement au CeGIDD le lendemain.'},
+          {head:'Sans signe de gravité · hors horaires',rest:'appel astreinte infectieux 06 92 26 76 51 pour organiser le prélèvement au CeGIDD le lendemain.'},
           {head:'Signe de gravité',rest:'prise en charge aux urgences / service dédié · classement du cas avec infectiologue référent + ARS.'},
           {head:'Précautions',rest:'patient masqué + HdM, lésions couvertes · soignant masque chirurgical (FFP2 si geste aérosolisant), surblouse, gants, protection oculaire.'}
         ],
@@ -1493,7 +1493,7 @@ class Component extends DCLogic {
           {head:'Enfant < 15 ans',rest:'alerter le sénior UHCD pédiatrique (poste 40210), puis mêmes circuits que l\u2019adulte.'},
           {head:'Enfant < 6 ans',rest:'prise en charge conjointe infectiologue + sénior UHCD pédiatrique · prélèvements réalisés par le pédiatre.'},
           {head:'Box / précautions',rest:'box dédié (NRBC), porte fermée · précautions contact + respiratoire (AIR + CONTACT) · enfant + accompagnant masqués.'},
-          {head:'Validation',rest:'classement du cas avec l\u2019infectiologue référent (40464 · astreinte 06 92 26 75 51) + ARS.'}
+          {head:'Validation',rest:'classement du cas avec l\u2019infectiologue référent (40464 · astreinte 06 92 26 76 51) + ARS.'}
         ]
       },
       sud:{

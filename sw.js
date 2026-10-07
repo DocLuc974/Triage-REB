@@ -2,7 +2,7 @@
    Cache "shell" pour fonctionnement hors-ligne une fois l'app installée.
    Les données de zones (.json) sont en "réseau d'abord" pour toujours
    récupérer la dernière mise à jour, avec repli sur le cache hors-ligne. */
-const CACHE = 'triage-reb-v6';
+const CACHE = 'triage-reb-v7';
 const CORE = [
   './',
   './index.html',
